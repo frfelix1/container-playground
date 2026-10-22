@@ -160,7 +160,7 @@ devOps_practise/
 
 | # | Java / architecture | Docker / K8s / DevOps |
 | --- | --- | --- |
-| 0 | ✅ Done (with the old Python app) | Container basics: namespaces, cgroups, layers, `docker run`; repo setup, branch protection, Makefile |
+| 0 | ✅ Done | Container basics: namespaces, cgroups, layers, `docker run`; repo setup, branch protection, Makefile |
 | 1 | Setup checks (below). Maven parent and modules. Build `execution-api` test-first: REST CRUD for projects/records, JPA entities, Flyway, SQL Server via Testcontainers | SQL Server spike (below). Multi-stage Java Dockerfile, naive vs optimized (layered jar), JVM memory in containers (`MaxRAMPercentage`), SQL Server and `execution-api` in Compose with healthchecks |
 | 2 | `provisioning-api`: Spring Security, `iam` schema (users, roles, permissions), RBAC checks, calls `execution-api` with `RestClient`, service-to-service token, error mapping (401/403/404/409) | Compose networks and DNS, startup order, per-service database logins created by an init script. CI in GitHub Actions: `./mvnw verify` with Testcontainers, image build, Trivy scan, push to GHCR tagged with the commit SHA |
 | 3 | `gui`: Spring MVC controllers, Thymeleaf views, login, `fetch()` for in-page create/delete, CSRF handling | Whole system runs with `docker compose up`. Make targets for build, up, down and logs |
@@ -229,7 +229,6 @@ Do this first so a platform problem shows up before any code depends on it.
 
 ## Decisions and scope boundaries
 
-- The Python linkr app is replaced by provisio. Phase 0 knowledge carries over.
 - Database: SQL Server, because the role asks for it. One instance, two databases, one login per service.
 - Azure SQL Edge (the old ARM-friendly option) was retired in 2025. Use the official amd64 image under emulation.
 - CI/CD: GitHub Actions. Registry: GHCR.
