@@ -1,24 +1,54 @@
-# Context Handoff: Docker & Kubernetes Learning Project
+# Context Handoff: Java + Docker & Kubernetes Learning Project
 
 ## Who I am and the goal
 
-- I have a strong DevOps background, including CI/CD, Linux, cloud and Azure DevOps Expert-level knowledge.
-- I have very little practical Docker/Kubernetes experience.
-- The primary goal is to build real practical understanding of Docker and Kubernetes so I can list them on my CV and answer technical interview questions honestly.
-- The secondary goal is to keep my DevOps skills sharp by running the project like a real team would.
-- A DevOps addition belongs in the project only when it touches Docker or Kubernetes.
-- AI-driven development and spec-driven development are not learning goals for this project. AI may generate boilerplate, but the project is not about learning AI-assisted programming.
+- Strong DevOps background: CI/CD, Linux, cloud, Azure DevOps at expert level.
+- Little practical Docker/Kubernetes experience. University-level Java from a few years ago; not comfortable writing it from scratch.
+- **Target role: Systemutveckling Java.** The role asks for:
+  - Java at a stated competence level.
+  - MVC architecture and Maven (or similar).
+  - Deep web development: AJAX, REST, WebServices (SOAP in practice).
+  - Databases, primarily **SQL Server**.
+  - Eclipse or equivalent IDE, and test-driven development.
+  - Documented Java training and the ability to teach Java.
+- Primary goal: practise every item above in one realistic system, built with an architect's mindset.
+- Secondary goal: build real Docker/Kubernetes understanding for the CV and interviews, run like a real team would (CI/CD, GitOps).
+- AI-driven or spec-driven development is not a learning goal. AI generates code; I learn by reading, changing and breaking it.
 
 ## Learning approach
 
-- Do not make me write YAML or Dockerfiles from scratch. Generate working, heavily commented boilerplate.
-- Teach through a `change -> predict -> run -> explain` loop. Ask me to predict the outcome and wait for my answer before revealing it.
-- Prefer side-by-side comparisons, such as a naive and optimized Dockerfile or Postgres as a Deployment versus a StatefulSet.
-- Use break-it labs. Tell me how to break something, but not what symptom to expect. Have me diagnose it with `describe`, `logs` and `events` before explaining it.
-- End each phase with a checkpoint, resources, an interview drill with questions asked one at a time, and a prompt to write `docs/notes-phaseN.md` in my own words.
-- Everything should run locally on kind so it is free and cannot accidentally incur cloud costs.
-- Revise the plan between phases when practical experience shows that the scope or order should change.
-- Keep the project small enough that the infrastructure remains the subject.
+There are three tracks, each with its own style.
+
+### Infrastructure (Dockerfiles, YAML, Helm, CI)
+
+- Generate working, heavily commented boilerplate. Do not make me write it from scratch.
+- Teach through `change -> predict -> run -> explain`. Ask me to predict and wait for my answer before revealing it.
+- Prefer side-by-side comparisons, such as a naive and optimized Dockerfile.
+- Break-it labs: tell me how to break it, not what the symptom will be. I diagnose with `docker logs/inspect`, `kubectl describe/logs` and events before you explain.
+
+### Java and Spring
+
+- Generate the skeleton and the first working feature of each module, heavily commented with *why*, not only *what*.
+- Then give me exercises of three kinds:
+  1. **TDD katas.** You write a failing test (for example "an EDITOR cannot delete a project"). I make it pass. Red -> green -> refactor.
+  2. **Extend.** I add a feature by following the pattern of an existing one (a new endpoint, entity, migration or view).
+  3. **Break-it.** Remove an annotation, a bean or a config line. I diagnose from the stack trace and logs before you explain.
+- Hint ladder: when I am stuck, give a hint first, then a bigger hint, then the answer.
+
+### Quirk drills
+
+- Each phase has about five "predict the output / predict the behavior" snippets. I answer before running them.
+- Cover both core Java and Spring. The pool, roughly ordered by phase:
+  - **Core Java:** `==` vs `equals` (including the `Integer` cache from -128 to 127), `String` immutability, `equals`/`hashCode` contract in a `HashSet`, checked vs unchecked exceptions, `Optional` misuse (`get()`, `Optional` as a field), records and immutability, generics and type erasure, `List.of` being immutable, `ConcurrentModificationException`, `final` vs effectively final in lambdas, stream laziness, autoboxing `NullPointerException`, `BigDecimal` vs `double` for money, `try`-with-resources.
+  - **Spring:** `@Transactional` on a private method or via self-invocation (proxy bypass), checked exceptions not rolling back by default, `LazyInitializationException` and the N+1 query problem, open-session-in-view, field vs constructor injection, two beans of the same type (`NoUniqueBeanDefinitionException`, `@Primary`/`@Qualifier`), bean scopes (singleton holding state), `@Value` property resolution and profiles, `@Valid` missing so validation silently does nothing, `@RestController` vs `@Controller` (JSON vs view name), Spring Security filter ordering and why a request returns 401 vs 403, CSRF blocking `fetch()` POSTs, Jackson infinite recursion on bidirectional entities, `ddl-auto` fighting Flyway, Testcontainers vs `@MockBean` vs `@WebMvcTest` slices.
+
+### End of every phase
+
+- Checkpoint against concrete completion criteria.
+- Resources.
+- An interview drill of 8-12 questions, asked one at a time and graded. Mix Java/Spring and Docker/K8s questions as relevant.
+- A prompt to write `docs/notes-phaseN.md` in my own words.
+- Revise this plan if practice shows the scope or order should change.
 
 ## Instructions for the tutor
 
@@ -26,107 +56,211 @@ When I say **"I'm starting phase N"**, provide:
 
 1. Objectives.
 2. Prerequisite checks for tools and the previous phase's state.
-3. A concise concept primer with mental models, the problem each concept solves, and relevant Linux or networking mechanisms.
-4. New or changed boilerplate, heavily commented. Show diffs for existing files.
-5. A guided tour of the most important lines and fields.
+3. A concise concept primer (mental models, the problem each concept solves).
+4. New or changed code and boilerplate, heavily commented. Show diffs for existing files.
+5. A guided tour of the most important lines.
 6. Experiments using `change -> predict -> run -> explain`.
-7. Break-it labs that require diagnosis before explanation.
-8. Concrete completion criteria.
-9. Specific documentation and other resources.
-10. An 8-12 question interview drill, asked one question at a time and graded.
-11. A prompt for writing the phase notes.
+7. Java exercises (TDD kata, extend, break-it) and quirk drills.
+8. Infrastructure break-it labs.
+9. Completion criteria.
+10. Resources.
+11. Interview drill, one question at a time.
+12. Notes prompt.
 
-Always diagnose failures first. Prefer `docker inspect`, `docker logs`, `kubectl describe`, `kubectl logs` and Kubernetes events before suggesting fixes.
+Always diagnose failures first. Do not generate the whole repository in advance; generate files when their phase begins.
 
-## The project: linkr
+## The project: provisio
 
-`linkr` is a small Python URL shortener used to learn Docker and Kubernetes.
+A small access-provisioning system, following my boss's sketch. Users in the GUI create and manage **projects** and their **records**. What a user may do depends on their role.
 
-| Component   | Technology                    | What it teaches                                                     |
-| ----------- | ----------------------------- | ------------------------------------------------------------------- |
-| API         | Python 3.12, FastAPI, uvicorn | Stateless workload, Deployment, scaling and probes                  |
-| Database    | PostgreSQL 16                 | State, volumes, StatefulSet and Secrets                             |
-| Cache/queue | Redis 7                       | Service discovery, dependencies, caching and queues                 |
-| Worker      | Python script                 | Non-HTTP workload that consumes click events and updates PostgreSQL |
+```text
+Browser
+  │  (HTML pages + fetch()/AJAX)
+  ▼
+gui ──────────────► provisioning-api ──────────────► execution-api
+Spring MVC           Spring Security, RBAC            data operations only
+Thymeleaf            "may this user do this?"         (REST + one SOAP endpoint)
+                         │                                  │
+                         ▼                                  ▼
+                   SQL Server db: iam               SQL Server db: appdata
+                   users, roles, permissions        projects, records
+```
 
-API endpoints:
+### Responsibilities
 
-- `POST /shorten`
-- `GET /{code}`: returns a 307 redirect, uses Redis and emits a click event
-- `GET /stats/{code}`
-- `GET /healthz`: liveness endpoint
-- `GET /readyz`: readiness endpoint that checks PostgreSQL and Redis
-- `GET /debug/burn?seconds=N`: optional CPU load endpoint for HPA experiments
+- **gui**
+  - Classic MVC: Controller -> Model -> Thymeleaf view.
+  - Login form.
+  - Uses `fetch()` for in-page actions without reloads (AJAX).
+  - Never talks to a database.
+- **provisioning-api**
+  - Authenticates the user and checks role and permission in `iam`.
+  - Forwards allowed requests to `execution-api` with a service-to-service token.
+  - Returns 401/403 otherwise.
+  - Has no access to `appdata`.
+- **execution-api**
+  - Only data operations: create, read, update, delete.
+  - No business rules. Trusts only `provisioning-api`.
+  - Exposes REST, plus one small SOAP endpoint (Spring-WS) to cover "WebServices".
+  - Has no access to `iam`.
 
-The app also supports `CRASH_ON_START=true` for failure labs. Configuration uses `DATABASE_URL`, `REDIS_URL`, `LOG_LEVEL` and `APP_VERSION`.
+### Roles (initial)
 
-Expected repository layout:
+| Role | Permissions |
+| --- | --- |
+| VIEWER | Read projects and records |
+| EDITOR | VIEWER, plus create and update |
+| ADMIN | EDITOR, plus delete and assign roles to users |
+
+### Database decision
+
+- One SQL Server 2022 instance with two databases, `iam` and `appdata`.
+- A separate SQL login for each service, each with rights to only its own database. This enforces the split at the database level, not just by convention.
+- Schema is managed by Flyway migrations in each service. Hibernate `ddl-auto` is set to `validate`, never `update`.
+
+### Stack
+
+- Java 21, Spring Boot 3.x, Maven multi-module build with a parent POM.
+- Spring Web MVC, Thymeleaf, Spring Security, Spring Data JPA, plus one plain JDBC (`JdbcClient`) example for comparison.
+- Flyway, Spring-WS, springdoc-openapi, Spring Boot Actuator.
+- JUnit 5, Mockito, AssertJ, `@WebMvcTest`/`@DataJpaTest` test slices, Testcontainers (`mssqlserver` module).
+- Editor: Neovim with nvim-jdtls (the Eclipse JDT language server) and nvim-dap. jdtls covers the "Eclipse or equivalent" requirement.
+
+### Repository layout (monorepo, grows per phase)
 
 ```text
 devOps_practise/
-  app/
-  docker/
-    Dockerfile.naive
-    Dockerfile
-  .dockerignore
+  pom.xml                      parent POM: Java version, dependency management, modules
+  gui/
+  provisioning-api/
+  execution-api/
   compose.yaml
   kind-config.yaml
   k8s/
-    base/
-    variants/
-  chart/linkr/
+  chart/provisio/
   argocd/
   .github/workflows/
   Makefile
   docs/
+    adr/                       architecture decision records
+    notes-phaseN.md
+    training/                  phase 9 training module
   MASTER_PLAN.md
 ```
 
-Tools: Docker Desktop or OrbStack, kind, kubectl, k9s, Helm, hey, jq, and later the Argo CD and Argo Rollouts CLIs.
+### Tools
+
+- JDK 21 (Temurin) and Maven. Use the Maven wrapper `./mvnw` in the repo.
+- Docker Desktop with Rosetta emulation enabled.
+- kind, kubectl, k9s, Helm, hey, jq.
+- Later: Argo CD and Argo Rollouts CLIs.
+- Neovim with nvim-jdtls, nvim-dap and java-debug (installed via Mason).
 
 ## Phases
 
-| Phase                    | Docker/Kubernetes focus                                                                                                                                                   | DevOps thread                                                                                    |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| 0. Setup                 | Starter kit, plain `docker run`, and what a container is: a process with namespaces, cgroups and a layered filesystem                                                     | Repository setup, branch protection and a Makefile                                               |
-| 1. Docker                | Naive versus optimized images, image size and layers, cache behavior, PID 1 and signals, Compose, networks, DNS, volumes, healthchecks, resource limits and OOM           | GitHub Actions for lint, tests, image build, Trivy scan and GHCR push tagged with the commit SHA |
-| 2. Kubernetes core       | Cluster architecture, Deployment -> ReplicaSet -> Pod, Services and DNS, StatefulSet versus Deployment, ConfigMap, Secret, PVC, kubectl, k9s and failure diagnosis        | CI validates manifests with kubeconform                                                          |
-| 3. Production patterns   | Liveness/readiness/startup probes, requests and limits, QoS, Ingress, HPA, metrics-server, rolling updates, rollback, Jobs, CronJobs, init containers, PDB and node drain | CI policy gate: no root user, resource limits required and no `:latest`                          |
-| 4. Helm and GitOps       | Raw manifests versus Helm, templating, values per environment, install, upgrade and rollback                                                                              | Argo CD syncs from Git and self-heals manual cluster edits                                       |
-| 5. Progressive delivery  | Argo Rollouts blue/green deployment using active and preview Services, promotion and rollback                                                                             | Automated promotion and rollback                                                                 |
-| 6. Interview preparation | Mixed mock interview, live debugging drill, architecture diagram, reproducible README and three STAR stories                                                              | None beyond documenting the work                                                                 |
-| 7. Optional AKS          | Run the same chart on real AKS for roughly two hours, then delete it the same day                                                                                         | Learn cloud load balancer, storage and managed-control-plane differences                         |
+| # | Java / architecture | Docker / K8s / DevOps |
+| --- | --- | --- |
+| 0 | ✅ Done (with the old Python app) | Container basics: namespaces, cgroups, layers, `docker run`; repo setup, branch protection, Makefile |
+| 1 | Setup checks (below). Maven parent and modules. Build `execution-api` test-first: REST CRUD for projects/records, JPA entities, Flyway, SQL Server via Testcontainers | SQL Server spike (below). Multi-stage Java Dockerfile, naive vs optimized (layered jar), JVM memory in containers (`MaxRAMPercentage`), SQL Server and `execution-api` in Compose with healthchecks |
+| 2 | `provisioning-api`: Spring Security, `iam` schema (users, roles, permissions), RBAC checks, calls `execution-api` with `RestClient`, service-to-service token, error mapping (401/403/404/409) | Compose networks and DNS, startup order, per-service database logins created by an init script. CI in GitHub Actions: `./mvnw verify` with Testcontainers, image build, Trivy scan, push to GHCR tagged with the commit SHA |
+| 3 | `gui`: Spring MVC controllers, Thymeleaf views, login, `fetch()` for in-page create/delete, CSRF handling | Whole system runs with `docker compose up`. Make targets for build, up, down and logs |
+| 4 | SOAP endpoint on `execution-api` (Spring-WS, XSD-first), OpenAPI docs for the REST APIs, first ADRs (why three services, why two databases on one instance, REST vs SOAP) | Small infrastructure increment: call the SOAP endpoint from a container with curl |
+| 5 | None | Kubernetes core on kind: SQL Server as a StatefulSet with a PVC, three Deployments, Services and DNS, ConfigMaps, a Secret per service login. kubeconform in CI |
+| 6 | Actuator liveness/readiness health groups, graceful shutdown | Production patterns: startup/liveness/readiness probes (slow JVM start), requests and limits, QoS, Ingress, HPA with metrics-server, rolling update and rollback, Flyway as a Job or init container, PDB, node drain. CI policy gate: no root, limits required, no `:latest` |
+| 7 | Spring profiles per environment | Helm chart for all three services. Argo CD syncs from Git and self-heals manual edits |
+| 8 | None | Argo Rollouts blue/green for `provisioning-api` with active and preview Services, promotion and rollback |
+| 9 | A 60-minute "Spring Boot from zero" training module in `docs/training/`, using this project as the example. Covers "kunna hålla utbildning" | Interview prep: mixed Java + K8s mock interview, live debugging drill, architecture walkthrough, README that reproduces everything, three STAR stories |
+| 10 | None | Optional: run the same chart on AKS with Azure SQL for about two hours, then delete it the same day |
 
-### Phase 5 optional extension
+## Phase 1 setup checks
 
-Canary delivery with automated analysis is an optional follow-up if the core project is complete and I want more depth. It may require Prometheus and should not be allowed to expand the main project by default.
+Run these before writing any Java. Each check has a clear pass condition.
+
+### Toolchain
+
+| Check | Command | Pass |
+| --- | --- | --- |
+| JDK | `java -version` | Shows 21.x |
+| Maven | `./mvnw -v` (after the skeleton exists) | Shows Maven 3.9+ running on Java 21 |
+| Docker arch | `docker info --format '{{.Architecture}}'` | Shows `aarch64`. Confirm Rosetta emulation is enabled in Docker Desktop settings |
+
+### nvim-jdtls
+
+Open `execution-api/src/main/java/.../ProjectController.java` in Neovim.
+
+| # | Check | Pass |
+| --- | --- | --- |
+| 1 | `:checkhealth` and `:Mason` | jdtls, java-debug-adapter and java-test are installed |
+| 2 | `:LspInfo` (or `:checkhealth vim.lsp`) | A `jdtls` client is attached to the buffer, with the repo root as root dir |
+| 3 | Go to definition on a Spring annotation such as `@RestController` | Jumps into the decompiled or source jar. This proves Maven dependencies are resolved |
+| 4 | Type a deliberate error (`String x = 1;`) | Diagnostic appears without saving |
+| 5 | Completion on `List.of(1,2).` | Shows `stream()`, `size()` and other methods |
+| 6 | Code action on an unused import, or "organize imports" | Import is removed |
+| 7 | Rename a method with LSP rename | All call sites, including tests, are updated |
+| 8 | Change a dependency in `pom.xml` | jdtls picks it up. If not, run `:JdtUpdateConfig` (or restart) |
+| 9 | Run the nearest test from Neovim (`require('jdtls').test_nearest_method()`) | The test runs and passes |
+
+### nvim-dap walkthrough
+
+This is guided in phase 1, not just a pass/fail check.
+
+1. **Debug a unit test.** Set a breakpoint inside a service method. Debug the nearest test. Step over, step into, step out. Inspect locals in the scopes view. Evaluate an expression in the REPL.
+2. **Conditional breakpoint.** Break only when `projectId == 2`.
+3. **Debug the running app.**
+   - Start `execution-api` with `./mvnw spring-boot:run` and JDWP enabled on port 5005.
+   - Attach nvim-dap (an "attach" configuration on localhost:5005).
+   - Send a request with curl and hit the breakpoint inside the controller.
+4. **Debug inside a container.**
+   - Run the container with `JAVA_TOOL_OPTIONS` enabling JDWP and publish port 5005.
+   - Attach from Neovim.
+   - Discuss why this must never ship to production.
+5. **Find a bug with the debugger.** I plant a bug that the tests do not catch. You find it using breakpoints only, without reading the diff.
+
+### SQL Server spike (about 15 minutes)
+
+Do this first so a platform problem shows up before any code depends on it.
+
+1. Run `mcr.microsoft.com/mssql/server:2022-latest` with `docker run --platform linux/amd64`. Connect with `sqlcmd` inside the container and run `SELECT @@VERSION`.
+2. Create a kind cluster and run the same image as a pod. Check that it reaches Ready and accepts a query.
+3. If step 2 fails or is unstable:
+   - Fall back to running SQL Server as a plain container outside the cluster.
+   - Expose it to the cluster with a selector-less Service and an EndpointSlice, mirroring an external managed database.
+   - Record the decision as an ADR.
 
 ## Decisions and scope boundaries
 
-- CI/CD platform: GitHub Actions.
-- Image registry: GitHub Container Registry.
-- Phase 5: blue/green only by default.
-- Cloud: local-first. AKS is the final optional phase and does not need detailed planning yet.
-- Do not use LocalStack as an AKS substitute. It targets AWS and does not reproduce the real cloud wiring that makes a managed Kubernetes exercise useful.
-- Cut from the core plan: service mesh, Terraform, preview environments, multi-cluster setups, Vault and a full observability stack. Prometheus is allowed only if I choose the optional canary extension.
-- Do not generate the entire repository in advance. Generate files when the relevant phase begins so the plan can be revised between phases.
+- The Python linkr app is replaced by provisio. Phase 0 knowledge carries over.
+- Database: SQL Server, because the role asks for it. One instance, two databases, one login per service.
+- Azure SQL Edge (the old ARM-friendly option) was retired in 2025. Use the official amd64 image under emulation.
+- CI/CD: GitHub Actions. Registry: GHCR.
+- Auth: Spring Security with users stored in `iam`. No OAuth, Keycloak or JWT identity provider.
+- Phase 8 is blue/green only. Canary with automated analysis (needs Prometheus) is an optional extension.
+- Cut from the core plan: Redis, message queues and Kafka, service mesh, Terraform, preview environments, multi-cluster, Vault, full observability stack, frontend frameworks (no React; Thymeleaf + `fetch()` is the point).
+- Local-first on kind. AKS only in optional phase 10.
 
 ## Resources
 
-- Kubernetes documentation: https://kubernetes.io/docs/home/
-- Docker documentation: https://docs.docker.com/
+- Spring Boot reference: https://docs.spring.io/spring-boot/
+- Spring guides (short, hands-on): https://spring.io/guides
+- Spring Security reference: https://docs.spring.io/spring-security/reference/
+- Baeldung (practical Spring/Java articles): https://www.baeldung.com/
+- Testcontainers for Java: https://java.testcontainers.org/
+- Flyway: https://documentation.red-gate.com/flyway
+- SQL Server on Linux containers: https://learn.microsoft.com/sql/linux/sql-server-linux-docker-container-deployment
+- nvim-jdtls: https://github.com/mfussenegger/nvim-jdtls
+- nvim-dap: https://github.com/mfussenegger/nvim-dap
+- Book: _Effective Java_ by Joshua Bloch (the source of many quirk drills)
+- Book: _Spring Boot: Up and Running_ by Mark Heckler
+- Kubernetes docs: https://kubernetes.io/docs/home/
+- Docker docs: https://docs.docker.com/
 - kind: https://kind.sigs.k8s.io/
 - Helm: https://helm.sh/docs/
 - Argo CD: https://argo-cd.readthedocs.io/
 - Argo Rollouts: https://argoproj.github.io/argo-rollouts/
-- k9s: https://k9scli.io/
-- Interactive labs: https://killercoda.com/ and https://labs.iximiuz.com/
-- Book: _Docker Deep Dive_ by Nigel Poulton
 - Book: _Kubernetes Up & Running_ by Burns, Beda and Hightower
-- Videos: TechWorld with Nana's Docker and Kubernetes crash courses
 
 ## Starting point
 
 In a new chat opened in this folder, say:
 
-> I'm starting phase 0 now. Use MASTER_PLAN.md as context. Generate only the starter kit needed for phase 0 and phase 1, and guide me through it using the change -> predict -> run -> explain workflow.
+> I'm starting phase 1 now. Use MASTER_PLAN.md as context. Begin with the setup checks and the SQL Server spike, then generate the Maven skeleton and execution-api, and guide me through it.
