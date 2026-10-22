@@ -42,12 +42,12 @@ Always diagnose failures first. Prefer `docker inspect`, `docker logs`, `kubectl
 
 `linkr` is a small Python URL shortener used to learn Docker and Kubernetes.
 
-| Component | Technology | What it teaches |
-|---|---|---|
-| API | Python 3.12, FastAPI, uvicorn | Stateless workload, Deployment, scaling and probes |
-| Database | PostgreSQL 16 | State, volumes, StatefulSet and Secrets |
-| Cache/queue | Redis 7 | Service discovery, dependencies, caching and queues |
-| Worker | Python script | Non-HTTP workload that consumes click events and updates PostgreSQL |
+| Component   | Technology                    | What it teaches                                                     |
+| ----------- | ----------------------------- | ------------------------------------------------------------------- |
+| API         | Python 3.12, FastAPI, uvicorn | Stateless workload, Deployment, scaling and probes                  |
+| Database    | PostgreSQL 16                 | State, volumes, StatefulSet and Secrets                             |
+| Cache/queue | Redis 7                       | Service discovery, dependencies, caching and queues                 |
+| Worker      | Python script                 | Non-HTTP workload that consumes click events and updates PostgreSQL |
 
 API endpoints:
 
@@ -86,16 +86,16 @@ Tools: Docker Desktop or OrbStack, kind, kubectl, k9s, Helm, hey, jq, and later 
 
 ## Phases
 
-| Phase | Docker/Kubernetes focus | DevOps thread |
-|---|---|---|
-| 0. Setup | Starter kit, plain `docker run`, and what a container is: a process with namespaces, cgroups and a layered filesystem | Repository setup, branch protection and a Makefile |
-| 1. Docker | Naive versus optimized images, image size and layers, cache behavior, PID 1 and signals, Compose, networks, DNS, volumes, healthchecks, resource limits and OOM | GitHub Actions for lint, tests, image build, Trivy scan and GHCR push tagged with the commit SHA |
-| 2. Kubernetes core | Cluster architecture, Deployment -> ReplicaSet -> Pod, Services and DNS, StatefulSet versus Deployment, ConfigMap, Secret, PVC, kubectl, k9s and failure diagnosis | CI validates manifests with kubeconform |
-| 3. Production patterns | Liveness/readiness/startup probes, requests and limits, QoS, Ingress, HPA, metrics-server, rolling updates, rollback, Jobs, CronJobs, init containers, PDB and node drain | CI policy gate: no root user, resource limits required and no `:latest` |
-| 4. Helm and GitOps | Raw manifests versus Helm, templating, values per environment, install, upgrade and rollback | Argo CD syncs from Git and self-heals manual cluster edits |
-| 5. Progressive delivery | Argo Rollouts blue/green deployment using active and preview Services, promotion and rollback | Automated promotion and rollback |
-| 6. Interview preparation | Mixed mock interview, live debugging drill, architecture diagram, reproducible README and three STAR stories | None beyond documenting the work |
-| 7. Optional AKS | Run the same chart on real AKS for roughly two hours, then delete it the same day | Learn cloud load balancer, storage and managed-control-plane differences |
+| Phase                    | Docker/Kubernetes focus                                                                                                                                                   | DevOps thread                                                                                    |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| 0. Setup                 | Starter kit, plain `docker run`, and what a container is: a process with namespaces, cgroups and a layered filesystem                                                     | Repository setup, branch protection and a Makefile                                               |
+| 1. Docker                | Naive versus optimized images, image size and layers, cache behavior, PID 1 and signals, Compose, networks, DNS, volumes, healthchecks, resource limits and OOM           | GitHub Actions for lint, tests, image build, Trivy scan and GHCR push tagged with the commit SHA |
+| 2. Kubernetes core       | Cluster architecture, Deployment -> ReplicaSet -> Pod, Services and DNS, StatefulSet versus Deployment, ConfigMap, Secret, PVC, kubectl, k9s and failure diagnosis        | CI validates manifests with kubeconform                                                          |
+| 3. Production patterns   | Liveness/readiness/startup probes, requests and limits, QoS, Ingress, HPA, metrics-server, rolling updates, rollback, Jobs, CronJobs, init containers, PDB and node drain | CI policy gate: no root user, resource limits required and no `:latest`                          |
+| 4. Helm and GitOps       | Raw manifests versus Helm, templating, values per environment, install, upgrade and rollback                                                                              | Argo CD syncs from Git and self-heals manual cluster edits                                       |
+| 5. Progressive delivery  | Argo Rollouts blue/green deployment using active and preview Services, promotion and rollback                                                                             | Automated promotion and rollback                                                                 |
+| 6. Interview preparation | Mixed mock interview, live debugging drill, architecture diagram, reproducible README and three STAR stories                                                              | None beyond documenting the work                                                                 |
+| 7. Optional AKS          | Run the same chart on real AKS for roughly two hours, then delete it the same day                                                                                         | Learn cloud load balancer, storage and managed-control-plane differences                         |
 
 ### Phase 5 optional extension
 
@@ -121,8 +121,8 @@ Canary delivery with automated analysis is an optional follow-up if the core pro
 - Argo Rollouts: https://argoproj.github.io/argo-rollouts/
 - k9s: https://k9scli.io/
 - Interactive labs: https://killercoda.com/ and https://labs.iximiuz.com/
-- Book: *Docker Deep Dive* by Nigel Poulton
-- Book: *Kubernetes Up & Running* by Burns, Beda and Hightower
+- Book: _Docker Deep Dive_ by Nigel Poulton
+- Book: _Kubernetes Up & Running_ by Burns, Beda and Hightower
 - Videos: TechWorld with Nana's Docker and Kubernetes crash courses
 
 ## Starting point
