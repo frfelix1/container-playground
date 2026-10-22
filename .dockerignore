@@ -1,0 +1,9 @@
+# Everything here is excluded from the build context sent to the Docker daemon.
+# Smaller context = faster builds, and secrets/junk never end up in an image.
+.git
+.venv
+**/__pycache__
+**/*.pyc
+docs
+*.md
+.env
