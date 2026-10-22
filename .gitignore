@@ -1,5 +1,8 @@
-.venv/
-__pycache__/
-*.pyc
+target/
+*.class
 .env
-.pytest_cache/
+# jdtls/Eclipse project metadata generated in the repo
+.project
+.classpath
+.settings/
+.factorypath
