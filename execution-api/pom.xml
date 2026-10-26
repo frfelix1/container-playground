@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  execution-api: data operations only (CRUD on projects and records).
+  Versions are NOT set here; they are inherited from the parent POM.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- Our own parent, one folder up. groupId and version come from it. -->
+	<parent>
+		<groupId>com.provisio</groupId>
+		<artifactId>provisio-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>execution-api</artifactId>
+
+	<dependencies>
+		<!--
+		  Spring MVC + embedded Tomcat + Jackson (JSON).
+		  Note: Spring Boot 4 renamed the old "starter-web" to "starter-webmvc".
+		  No <version>: inherited from parent.
+		-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc</artifactId>
+		</dependency>
+
+		<!--
+		  JUnit 5, AssertJ, Mockito and Spring's MVC test support.
+		  scope=test: available to tests only, never packaged into the app jar.
+		-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Repackages the jar into a runnable "fat jar" (java -jar ...) and adds spring-boot:run. -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>

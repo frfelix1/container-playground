@@ -69,6 +69,19 @@ When I say **"I'm starting phase N"**, provide:
 
 Always diagnose failures first. Do not generate the whole repository in advance; generate files when their phase begins.
 
+Pacing:
+
+- One idea and one action per message. Never stack several new steps in one reply.
+- Before each action, explain in plain words what we are doing and why, and where it sits in the bigger picture.
+- After each step, ask a short check question and wait for my answer before moving on.
+- Assume I am new to Docker/K8s internals. Prefer simple diagrams and plain language over jargon.
+
+Rules for commands I am asked to run:
+
+- Explain every flag and argument (for example `-d`, `-e`, `-p`) and what the command does as a whole.
+- When I must predict the output, the flag explanations must not give away the answer. Explain what each flag does, not the consequence being tested. Put the prediction question before the explanation.
+- Pull images explicitly (`docker pull ...`) as a separate step before any `docker run`, `kind load` or manifest that uses them, so pull and auth problems surface on their own.
+
 ## The project: provisio
 
 A small access-provisioning system, following my boss's sketch. Users in the GUI create and manage **projects** and their **records**. What a user may do depends on their role.
@@ -120,7 +133,7 @@ Thymeleaf            "may this user do this?"         (REST + one SOAP endpoint)
 
 ### Stack
 
-- Java 21, Spring Boot 3.x, Maven multi-module build with a parent POM.
+- Java 21, Spring Boot 4.1.x (3.x reached end of open-source support in June 2026), Maven multi-module build with a parent POM.
 - Spring Web MVC, Thymeleaf, Spring Security, Spring Data JPA, plus one plain JDBC (`JdbcClient`) example for comparison.
 - Flyway, Spring-WS, springdoc-openapi, Spring Boot Actuator.
 - JUnit 5, Mockito, AssertJ, `@WebMvcTest`/`@DataJpaTest` test slices, Testcontainers (`mssqlserver` module).
@@ -220,7 +233,7 @@ This is guided in phase 1, not just a pass/fail check.
 
 Do this first so a platform problem shows up before any code depends on it.
 
-1. Run `mcr.microsoft.com/mssql/server:2022-latest` with `docker run --platform linux/amd64`. Connect with `sqlcmd` inside the container and run `SELECT @@VERSION`.
+1. Pull `mcr.microsoft.com/mssql/server:2022-latest` with `docker pull --platform linux/amd64`, then run it with `docker run --platform linux/amd64`. Connect with `sqlcmd` inside the container and run `SELECT @@VERSION`.
 2. Create a kind cluster and run the same image as a pod. Check that it reaches Ready and accepts a query.
 3. If step 2 fails or is unstable:
    - Fall back to running SQL Server as a plain container outside the cluster.
