@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Parent POM for the whole provisio repo.
+  It builds nothing itself; it coordinates the modules below and fixes
+  versions in ONE place so the three services can never drift apart.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!--
+	  Inherit from Spring Boot's parent. It brings a curated, tested set of
+	  library versions (Spring, Jackson, Hibernate, JUnit, ...) and sensible
+	  plugin defaults. Upgrading Spring Boot = changing this one version.
+	-->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>4.1.2</version>
+		<relativePath/> <!-- empty: fetch from Maven Central, not from a local folder -->
+	</parent>
+
+	<!-- Our own coordinates. Child modules reuse groupId and version. -->
+	<groupId>com.provisio</groupId>
+	<artifactId>provisio-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<!-- "pom" = I only coordinate other modules; I don't produce a jar. -->
+	<packaging>pom</packaging>
+
+	<properties>
+		<!-- Read by the Spring Boot parent to configure the compiler for Java 21. -->
+		<java.version>21</java.version>
+	</properties>
+
+	<!-- Modules built when you run ./mvnw from the repo root. Grows per phase. -->
+	<modules>
+		<module>execution-api</module>
+	</modules>
+</project>
