@@ -29,6 +29,39 @@
 		</dependency>
 
 		<!--
+		  The database translator: JPA annotations (@Entity, @Id), Hibernate
+		  (the code that turns objects into SQL and rows back into objects),
+		  and Spring Data repositories (interface in, working class out).
+		-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<!-- Flyway: runs db/migration/V*.sql on startup, in version order, once each. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-flyway</artifactId>
+		</dependency>
+
+		<!-- Flyway's SQL Server add-on. Without it Flyway can't talk to SQL Server. -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-sqlserver</artifactId>
+		</dependency>
+
+		<!--
+		  The SQL Server driver: opens the actual network connection to the database.
+		  scope=runtime: our code never uses its classes directly; it's only needed
+		  when the app runs (and tests run), not to compile our code.
+		-->
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!--
 		  JUnit 5, AssertJ, Mockito and Spring's MVC test support.
 		  scope=test: available to tests only, never packaged into the app jar.
 		-->
