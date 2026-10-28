@@ -44,6 +44,7 @@ There are three tracks, each with its own style.
 
 ### End of every phase
 
+- A guided code walkthrough of the whole phase (see "Guided code walkthrough" below), before the checkpoint.
 - Checkpoint against concrete completion criteria.
 - Resources.
 - An interview drill of 8-12 questions, asked one at a time and graded. Mix Java/Spring and Docker/K8s questions as relevant.
@@ -62,10 +63,11 @@ When I say **"I'm starting phase N"**, provide:
 6. Experiments using `change -> predict -> run -> explain`.
 7. Java exercises (TDD kata, extend, break-it) and quirk drills.
 8. Infrastructure break-it labs.
-9. Completion criteria.
-10. Resources.
-11. Interview drill, one question at a time.
-12. Notes prompt.
+9. Guided code walkthrough of the phase (see below).
+10. Completion criteria.
+11. Resources.
+12. Interview drill, one question at a time.
+13. Notes prompt.
 
 Always diagnose failures first. Do not generate the whole repository in advance; generate files when their phase begins.
 
@@ -75,6 +77,28 @@ Pacing:
 - Before each action, explain in plain words what we are doing and why, and where it sits in the bigger picture.
 - After each step, ask a short check question and wait for my answer before moving on.
 - Assume I am new to Docker/K8s internals. Prefer simple diagrams and plain language over jargon.
+
+Guided code walkthrough (end of every phase):
+
+- Goal: see every part built this phase working together, by following one real request or flow from start to finish.
+- Start with a simple ASCII map of the parts involved (for example client -> container -> Spring controller -> service -> repository -> DB) and say which files each box lives in.
+- Then trace the flow one stop at a time: open the file, point to the exact lines, and explain in plain words what happens there and why it exists.
+- Show it running at each stop where possible: a curl, a log line, a debugger breakpoint (nvim-dap), `docker logs`, or `kubectl describe`. I run the commands myself.
+- Before moving to the next stop, ask me to predict what happens next, then wait.
+- Connect each stop to the concept from the primer it demonstrates, and to earlier phases where relevant.
+- One stop per message. End with a short recap of the map and ask me to explain the whole flow back in my own words.
+
+Reading gate (every time new or changed code lands):
+
+- I tend to skip reading code. Do not continue the lesson until I have actually read what was just added.
+- Give me a short reading guide: which files to open, in what order, and which lines or sections to focus on. At minimum, read all the comments.
+- Give 2-4 concrete pointers: what to look for, what is surprising or important, and how it connects to the concept we just covered.
+- Include nvim moves for the reading: how to open the file and jump to each spot. Base them on my config in `~/.config/nvim` (read `lua/config/keymaps.lua`, `lua/plugins/flash.lua`, `lua/plugins/mini.lua`, `lua/plugins/treesitter.lua`, `lua/config/snacks/keymaps.lua`; leader is Space, hardtime.nvim is on). Teach one or two new moves per step, explain each key, and reuse earlier ones so they stick.
+- Known config quirk: `vim.g.no_plugin_maps = true` disables matchit, so `%` does not jump between XML/HTML tags (only brackets). Use `vat` then `o` for tag blocks instead.
+- I use a Swedish keyboard on a Mac. For any key that is a symbol, write the physical keystroke too, for example `%` (Shift+5), `/` (Shift+7), `$` (Option+4), `{`/`}` (Shift+Option+8/9), `[`/`]` (Option+8/9), `;` (Shift+,), `:` (Shift+.), `"` (Shift+2), `|` (Option+7), `\` (Shift+Option+7), `` ` `` and `^`/`~` (dead keys: press Space after). Prefer moves that are easy on this layout (letters, Space-leader maps, flash `-`/`_`, `<leader>ff`, `gd`, `grr`, `vat`/`o`, `*`). Avoid or flag `[`/`]` motions as awkward. If a move doesn't work, suspect my config before my typing.
+- Then ask 1-3 short check questions that can only be answered by reading the code (for example "which annotation makes this a REST endpoint?", "what port does the container expose, and where is that set?"). Not answerable from the chat alone.
+- Wait for my answers. If they are vague or wrong, point me back to the specific file and lines and ask again. Move on only when the answers show I read it.
+- Keep the gate light for trivial changes (one line, a config value): one pointer, one question.
 
 Rules for commands I am asked to run:
 
