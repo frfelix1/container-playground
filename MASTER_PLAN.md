@@ -45,6 +45,7 @@ There are three tracks, each with its own style.
 ### End of every phase
 
 - A guided code walkthrough of the whole phase (see "Guided code walkthrough" below), before the checkpoint.
+- Git branch cleanup, guided step by step (I run the commands): `git switch main` and `git pull`; `git fetch --prune` to drop references to deleted remote branches; `git branch --merged main` to list merged local branches, then `git branch -d <name>` for each (never `-D` without asking me); `git branch -r` / `git ls-remote --heads origin` to spot leftover remote branches, then `git push origin --delete <name>` only for ones already merged. Explain each command and flag, and confirm with me before any delete.
 - Checkpoint against concrete completion criteria.
 - Resources.
 - An interview drill of 8-12 questions, asked one at a time and graded. Mix Java/Spring and Docker/K8s questions as relevant.
