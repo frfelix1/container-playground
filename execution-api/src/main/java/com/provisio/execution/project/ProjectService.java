@@ -14,9 +14,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectService {
 
+    private final ProjectRepository projectRepository;
+
+    public ProjectService(ProjectRepository projectRepository) {
+
+        this.projectRepository = projectRepository;
+    }
 	public Optional<Project> findById(Long id) {
-		// Not implemented yet: the repository layer comes later.
-		// The controller test replaces this whole class with a mock, so it never runs there.
-		throw new UnsupportedOperationException("not implemented yet");
+
+        return this.projectRepository.findById(id);
 	}
 }
