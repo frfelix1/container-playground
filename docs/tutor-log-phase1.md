@@ -5,7 +5,7 @@
 - Done this session: experiment 4 (@Table removed -> "missing table [project]"),
   spring.flyway.validate-migration-naming=true (committed, misnamed-file failure NOT run),
   break-it >300 chars -> regression test saveRejectsNameLongerThan300Chars (committed).
-- Next step: pick from open items: end-to-end test (recommended) or @Transactional rollback proof.
+- Next step: run ProjectEndToEndTest (just created), learner diagnoses the result. Learner predicted 200 (server sees the row).
 - Quiet test command (fixed grep): ./mvnw -pl execution-api test 2>&1 | grep -E "Tests run:|\[ERROR\]|Expecting|Schema.validation"
 - Learner context-switches a lot: start each session with a 3-line recap and paste code, don't rely on memory.
 
@@ -17,6 +17,7 @@
 | Limit 300 lives in V3 and in test (301); no Java validation | DB is last line of defence only | Phase 2: @Size(max=300) + shared constant, 400 instead of DB error |
 | Mixed tabs/spaces; learner prefers spaces | Cosmetic | Any time: one reformat pass |
 | @Transactional rollback in tests | Used but not proven | Phase 1, optional experiment |
+| Quirk: @Transactional test + RANDOM_PORT (test thread vs Tomcat thread) | Promised to learner; ProjectEndToEndTest built to hit it | Phase 1, NOW: diagnose, then fix and explain |
 
 ## How the learner did
 - Strong: Flyway mental model (fix forward, checksums need a long-lived DB, only V3 runs on existing DB), misnamed-file prediction, getters/Jackson key naming, wiring the service from the pattern.
