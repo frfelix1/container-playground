@@ -1,16 +1,18 @@
 package com.provisio.execution.project;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Optional;
+
+import com.provisio.execution.TestcontainersConfiguration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.provisio.execution.TestcontainersConfiguration;
 
 // Full app context with real beans (real service, real repository).
 @SpringBootTest
@@ -42,4 +44,12 @@ class ProjectServiceTest {
 	void findByIdReturnsEmptyForUnknownId() {
 		assertThat(service.findById(999_999L)).isEmpty();
 	}
+
+    @Test
+    void saveRejectsNameLongerThan300Chars() {
+        
+        String longName = "a".repeat(301);
+
+        assertThatThrownBy(() -> repository.save(new Project(null, longName))).isInstanceOf(DataAccessException.class).hasMessageContaining("truncated");
+    }
 }
