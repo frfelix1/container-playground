@@ -24,7 +24,7 @@ import org.springframework.web.client.RestClient;
 // Real SQL Server in a container, same as the other DB tests.
 @Import(TestcontainersConfiguration.class)
 
-//Not transactional since the services wait for each other and hang with it. We have a deleteAll() at the end to clean up after ourselves instead. 
+//We dont have @Transactional here since the services wait for each other. With transaction, a thread kept a transaction open without committing. Other threads can not reach the change since it was not committed, and thus the test hangs. We instead have a deleteAll() at the end to clean up.
 class ProjectEndToEndTest {
 
     // Spring injects the random port Tomcat picked at startup.
