@@ -17,7 +17,23 @@
 
 ## Learning approach
 
-There are three tracks, each with its own style.
+Goal: something to show early, then go deeper. Build the whole system end to end in thin slices first, then add depth. Sprints finish when they're done. There are no deadlines.
+
+### Depth tiers (decides how much time each piece gets)
+
+| Tier | What | How |
+| --- | --- | --- |
+| **Deep** | Service logic, RBAC, Spring Security, transactions, JPA, tests | I write the core myself, test first. Quirk drills and the hint ladder apply |
+| **Medium** | Dockerfile, Compose, K8s manifests, Helm, Argo | AI generates it with comments. I read it, then do one break-it lab per piece |
+| **Shallow** | POM boilerplate, CI YAML, README scaffolding, config | AI generates it. I skim it and can say what it does in one sentence |
+
+Rules that stop it from being vibecoded:
+
+- **Explain before merge:** every PR description has 3 lines in my own words: what it does, why, and one thing that could break it. If I can't write them, I don't merge.
+- **One break-it per feature**, not one per concept.
+- When unsure about a tier, default to medium.
+
+There are three tracks, each with its own style. They apply within the tier rules above.
 
 ### Infrastructure (Dockerfiles, YAML, Helm, CI)
 
@@ -37,58 +53,74 @@ There are three tracks, each with its own style.
 
 ### Quirk drills
 
-- Each phase has about five "predict the output / predict the behavior" snippets. I answer before running them.
-- Cover both core Java and Spring. The pool, roughly ordered by phase:
+- About five per sprint, and only on deep-tier code. "Predict the output / predict the behavior" snippets that I answer before running them. More on request.
+- Cover both core Java and Spring. The pool, roughly ordered by sprint:
   - **Core Java:** `==` vs `equals` (including the `Integer` cache from -128 to 127), `String` immutability, `equals`/`hashCode` contract in a `HashSet`, checked vs unchecked exceptions, `Optional` misuse (`get()`, `Optional` as a field), records and immutability, generics and type erasure, `List.of` being immutable, `ConcurrentModificationException`, `final` vs effectively final in lambdas, stream laziness, autoboxing `NullPointerException`, `BigDecimal` vs `double` for money, `try`-with-resources.
   - **Spring:** `@Transactional` on a private method or via self-invocation (proxy bypass), checked exceptions not rolling back by default, `LazyInitializationException` and the N+1 query problem, open-session-in-view, field vs constructor injection, two beans of the same type (`NoUniqueBeanDefinitionException`, `@Primary`/`@Qualifier`), bean scopes (singleton holding state), `@Value` property resolution and profiles, `@Valid` missing so validation silently does nothing, `@RestController` vs `@Controller` (JSON vs view name), Spring Security filter ordering and why a request returns 401 vs 403, CSRF blocking `fetch()` POSTs, Jackson infinite recursion on bidirectional entities, `ddl-auto` fighting Flyway, Testcontainers vs `@MockBean` vs `@WebMvcTest` slices.
 
-### End of every phase
+### End of every sprint
 
+<<<<<<< Updated upstream
 - A guided code walkthrough of the whole phase (see "Guided code walkthrough" below), before the checkpoint.
 - Checkpoint against concrete completion criteria.
 - Resources.
 - An interview drill of 8-12 questions, asked one at a time and graded. Mix Java/Spring and Docker/K8s questions as relevant.
 - A prompt to write `docs/notes-phaseN.md` in my own words.
+=======
+- Showcase check: tick off the sprint's items in the "Showcase checklist" below.
+- A guided code walkthrough of the sprint (see below), before the checkpoint.
+- Git branch cleanup, guided (I run the commands): `git switch main`, `git pull`, `git fetch --prune`, `git branch --merged main`, then `git branch -d <name>` (never `-D` without asking me), and `git push origin --delete <name>` only for merged remote branches. Confirm with me before any delete.
+- An interview drill of 8-12 questions, one at a time, graded. Mix Java/Spring and Docker/K8s.
+- One STAR story drafted from something that went wrong or was hard this sprint.
+- A prompt to write `docs/notes-sprintN.md` in my own words.
+>>>>>>> Stashed changes
 - Revise this plan if practice shows the scope or order should change.
 
 ## Instructions for the tutor
 
-When I say **"I'm starting phase N"**, provide:
+When I say **"I'm starting sprint N"** (or "continue"), provide:
 
-1. Objectives.
-2. Prerequisite checks for tools and the previous phase's state.
-3. A concise concept primer (mental models, the problem each concept solves).
-4. New or changed code and boilerplate, heavily commented. Show diffs for existing files.
-5. A guided tour of the most important lines.
-6. Experiments using `change -> predict -> run -> explain`.
-7. Java exercises (TDD kata, extend, break-it) and quirk drills.
-8. Infrastructure break-it labs.
-9. Guided code walkthrough of the phase (see below).
-10. Completion criteria.
-11. Resources.
-12. Interview drill, one question at a time.
-13. Notes prompt.
+1. Objectives and the showcase items this sprint delivers.
+2. A short recap (3 lines) plus open items from earlier tutor logs.
+3. A concise concept primer, only for deep and medium tier topics.
+4. Code: generate shallow and medium tier pieces in full, heavily commented. For deep tier pieces, give a failing test or skeleton and let me write the core.
+5. One break-it lab per feature, and TDD katas and quirk drills on deep-tier code.
+6. Completion criteria.
 
-Always diagnose failures first. Do not generate the whole repository in advance; generate files when their phase begins.
+Always diagnose failures first. Do not generate the whole repository in advance; generate files when their sprint begins.
 
 Pacing:
 
-- One idea and one action per message. Never stack several new steps in one reply.
-- Before each action, explain in plain words what we are doing and why, and where it sits in the bigger picture.
-- After each step, ask a short check question and wait for my answer before moving on.
+- Batch by default: one whole step per message (for example "generate the Dockerfile, build it, run it"). Collect the check questions at the end of the step instead of after each action.
+- Slow down to one action per message only for deep-tier work, or when I ask.
+- Before each step, say in one or two sentences what we're doing, why, and where it fits.
 - Assume I am new to Docker/K8s internals. Prefer simple diagrams and plain language over jargon.
+<<<<<<< Updated upstream
+=======
+- Whenever you ask me to read, open, or edit code, give the full file path and paste the relevant lines (with line numbers). Never make me hunt for files or rely on a handoff note.
+- If I push to skip a deep-tier item, name what I'd miss in one line, then follow my call.
 
-Guided code walkthrough (end of every phase):
+Tutor log (continuity across sessions):
 
-- Goal: see every part built this phase working together, by following one real request or flow from start to finish.
-- Start with a simple ASCII map of the parts involved (for example client -> container -> Spring controller -> service -> repository -> DB) and say which files each box lives in.
-- Then trace the flow one stop at a time: open the file, point to the exact lines, and explain in plain words what happens there and why it exists.
-- Show it running at each stop where possible: a curl, a log line, a debugger breakpoint (nvim-dap), `docker logs`, or `kubectl describe`. I run the commands myself.
-- Before moving to the next stop, ask me to predict what happens next, then wait.
-- Connect each stop to the concept from the primer it demonstrates, and to earlier phases where relevant.
-- One stop per message. End with a short recap of the map and ask me to explain the whole flow back in my own words.
+- Each sprint has `docs/tutor-log-sprintN.md` (phase 1's log stays `docs/tutor-log-phase1.md`), separate from my own notes.
+  The tutor proposes its content; build writes it.
+- Whenever the tutor says "later", "we'll cover", or takes a deliberate shortcut,
+  it is added to the current tutor log in the same session, with the target sprint.
+- At the end of each sprint the tutor log gets: how I did per area (strong / partial / gaps),
+  open items carried forward, and things to revisit.
+- At the start of every sprint (and every new session), the tutor reads all earlier
+  tutor logs and raises any open item that belongs to the current sprint.
+>>>>>>> Stashed changes
 
-Reading gate (every time new or changed code lands):
+Guided code walkthrough (end of every sprint):
+
+- Goal: follow one real request or flow from start to finish through everything built this sprint.
+- Start with a simple ASCII map of the parts (for example client -> container -> controller -> service -> repository -> DB) and the files each box lives in.
+- Trace the flow stop by stop with exact lines, explaining what happens and why. Show it running where possible (curl, log line, breakpoint, `docker logs`, `kubectl describe`). I run the commands.
+- Two or three stops per message. Ask me to predict the next stop at deep-tier stops only.
+- End with a short recap and ask me to explain the whole flow back in my own words.
+
+Reading gate (deep and medium tier code only; shallow tier gets one pointer and no questions):
 
 - I tend to skip reading code. Do not continue the lesson until I have actually read what was just added.
 - Give me a short reading guide: which files to open, in what order, and which lines or sections to focus on. At minimum, read all the comments.
@@ -163,7 +195,7 @@ Thymeleaf            "may this user do this?"         (REST + one SOAP endpoint)
 - JUnit 5, Mockito, AssertJ, `@WebMvcTest`/`@DataJpaTest` test slices, Testcontainers (`mssqlserver` module).
 - Editor: Neovim with nvim-jdtls (the Eclipse JDT language server) and nvim-dap. jdtls covers the "Eclipse or equivalent" requirement.
 
-### Repository layout (monorepo, grows per phase)
+### Repository layout (monorepo, grows per sprint)
 
 ```text
 devOps_practise/
@@ -180,8 +212,8 @@ devOps_practise/
   Makefile
   docs/
     adr/                       architecture decision records
-    notes-phaseN.md
-    training/                  phase 9 training module
+    notes-sprintN.md
+    training/                  sprint 4 training module
   MASTER_PLAN.md
 ```
 
@@ -193,21 +225,29 @@ devOps_practise/
 - Later: Argo CD and Argo Rollouts CLIs.
 - Neovim with nvim-jdtls, nvim-dap and java-debug (installed via Mason).
 
-## Phases
+## Sprints
 
-| # | Java / architecture | Docker / K8s / DevOps |
-| --- | --- | --- |
-| 0 | ✅ Done | Container basics: namespaces, cgroups, layers, `docker run`; repo setup, branch protection, Makefile |
-| 1 | Setup checks (below). Maven parent and modules. Build `execution-api` test-first: REST CRUD for projects/records, JPA entities, Flyway, SQL Server via Testcontainers | SQL Server spike (below). Multi-stage Java Dockerfile, naive vs optimized (layered jar), JVM memory in containers (`MaxRAMPercentage`), SQL Server and `execution-api` in Compose with healthchecks |
-| 2 | `provisioning-api`: Spring Security, `iam` schema (users, roles, permissions), RBAC checks, calls `execution-api` with `RestClient`, service-to-service token, error mapping (401/403/404/409) | Compose networks and DNS, startup order, per-service database logins created by an init script. CI in GitHub Actions: `./mvnw verify` with Testcontainers, image build, Trivy scan, push to GHCR tagged with the commit SHA |
-| 3 | `gui`: Spring MVC controllers, Thymeleaf views, login, `fetch()` for in-page create/delete, CSRF handling | Whole system runs with `docker compose up`. Make targets for build, up, down and logs |
-| 4 | SOAP endpoint on `execution-api` (Spring-WS, XSD-first), OpenAPI docs for the REST APIs, first ADRs (why three services, why two databases on one instance, REST vs SOAP) | Small infrastructure increment: call the SOAP endpoint from a container with curl |
-| 5 | None | Kubernetes core on kind: SQL Server as a StatefulSet with a PVC, three Deployments, Services and DNS, ConfigMaps, a Secret per service login. kubeconform in CI |
-| 6 | Actuator liveness/readiness health groups, graceful shutdown | Production patterns: startup/liveness/readiness probes (slow JVM start), requests and limits, QoS, Ingress, HPA with metrics-server, rolling update and rollback, Flyway as a Job or init container, PDB, node drain. CI policy gate: no root, limits required, no `:latest` |
-| 7 | Spring profiles per environment | Helm chart for all three services. Argo CD syncs from Git and self-heals manual edits |
-| 8 | None | Argo Rollouts blue/green for `provisioning-api` with active and preview Services, promotion and rollback |
-| 9 | A 60-minute "Spring Boot from zero" training module in `docs/training/`, using this project as the example. Covers "kunna hålla utbildning" | Interview prep: mixed Java + K8s mock interview, live debugging drill, architecture walkthrough, README that reproduces everything, three STAR stories |
-| 10 | None | Optional: run the same chart on AKS with Azure SQL for about two hours, then delete it the same day |
+Thin end-to-end first, depth after. Each sprint ends with something showable. Phase 0 is done. Phase 1 is nearly done and gets finished inside sprint 1.
+
+| Sprint | Java / architecture | Docker / K8s / DevOps | Showcase output |
+| --- | --- | --- | --- |
+| 0 | ✅ Done (was phase 0) | Container basics, repo setup, branch protection, Makefile | – |
+| 1 | Finish phase 1: close open tutor-log items, REST CRUD for projects/records in `execution-api` (deep) | Multi-stage Dockerfile, layered jar, `MaxRAMPercentage` (medium). SQL Server + `execution-api` in Compose with healthchecks (medium). GitHub Actions: `./mvnw verify`, image build, Trivy, push to GHCR by SHA (shallow) | README with architecture diagram and quick start, CI badge, first ADR |
+| 2 | `provisioning-api`: Spring Security, `iam` schema, RBAC rules test-first, `RestClient` to `execution-api`, service token, 401/403/404/409 mapping (deep). Minimal `gui`: login, list, one `fetch()` create with CSRF (medium) | Compose networks/DNS, init script with one SQL login per service | `docker compose up` runs the whole system; demo GIF in README |
+| 3 | Actuator health groups, graceful shutdown, Spring profiles (medium) | kind: SQL Server StatefulSet + PVC, three Deployments, Services, ConfigMaps, Secrets, probes, limits, Ingress (medium). Helm chart, Argo CD syncing from Git (medium). kubeconform + policy gate in CI (shallow) | One-command local cluster, GitOps screenshot, ADRs for the K8s choices |
+| 4 | SOAP endpoint (Spring-WS, XSD-first), OpenAPI docs (medium). Full `gui` with Thymeleaf views (medium). 60-min "Spring Boot from zero" training module (deep) | HPA, PDB, node drain, Flyway as Job, Argo Rollouts blue/green (medium) | Training module, three STAR stories, mock interview done |
+| 5 | Optional | AKS + Azure SQL for about two hours, then delete it the same day | Screenshot and a short write-up |
+
+Within a sprint, the order is flexible. Showcase items count as part of "done".
+
+### Showcase checklist
+
+- [ ] README: what it is, architecture diagram, quick start, tech list, links to ADRs
+- [ ] CI badge green on `main`
+- [ ] `docs/adr/` with at least 3 ADRs
+- [ ] Demo GIF or screenshots (compose and kind)
+- [ ] `docs/training/` module
+- [ ] Three STAR stories in `docs/interview/` (private if preferred)
 
 ## Phase 1 setup checks
 
@@ -239,7 +279,7 @@ Open `execution-api/src/main/java/.../ProjectController.java` in Neovim.
 
 ### nvim-dap walkthrough
 
-This is guided in phase 1, not just a pass/fail check.
+Optional, on demand. Do it when a real bug needs a debugger, not as a set exercise.
 
 1. **Debug a unit test.** Set a breakpoint inside a service method. Debug the nearest test. Step over, step into, step out. Inspect locals in the scopes view. Evaluate an expression in the REPL.
 2. **Conditional breakpoint.** Break only when `projectId == 2`.
@@ -270,9 +310,9 @@ Do this first so a platform problem shows up before any code depends on it.
 - Azure SQL Edge (the old ARM-friendly option) was retired in 2025. Use the official amd64 image under emulation.
 - CI/CD: GitHub Actions. Registry: GHCR.
 - Auth: Spring Security with users stored in `iam`. No OAuth, Keycloak or JWT identity provider.
-- Phase 8 is blue/green only. Canary with automated analysis (needs Prometheus) is an optional extension.
+- Rollouts are blue/green only. Canary with automated analysis (needs Prometheus) is an optional extension.
 - Cut from the core plan: Redis, message queues and Kafka, service mesh, Terraform, preview environments, multi-cluster, Vault, full observability stack, frontend frameworks (no React; Thymeleaf + `fetch()` is the point).
-- Local-first on kind. AKS only in optional phase 10.
+- Local-first on kind. AKS only in optional sprint 5.
 
 ## Resources
 
@@ -299,4 +339,4 @@ Do this first so a platform problem shows up before any code depends on it.
 
 In a new chat opened in this folder, say:
 
-> I'm starting phase 1 now. Use MASTER_PLAN.md as context. Begin with the setup checks and the SQL Server spike, then generate the Maven skeleton and execution-api, and guide me through it.
+> I'm starting sprint 1. Use MASTER_PLAN.md and docs/tutor-log-phase1.md as context. Recap where phase 1 stopped, then go.
