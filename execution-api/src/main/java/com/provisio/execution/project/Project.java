@@ -25,39 +25,39 @@ import jakarta.persistence.Table;
 @Table(name = "projects")
 public class Project {
 
-	/*
-	 * @Id = this field is the primary key.
-	 * @GeneratedValue(IDENTITY) = "the database hands out the id", matching
-	 * IDENTITY(1, 1) in V1__create_projects.sql. On insert, Hibernate leaves id
-	 * out and reads back the number SQL Server picked.
-	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    /*
+     * @Id = this field is the primary key.
+     * @GeneratedValue(IDENTITY) = "the database hands out the id", matching
+     * IDENTITY(1, 1) in V1__create_projects.sql. On insert, Hibernate leaves id
+     * out and reads back the number SQL Server picked.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	// No annotation needed: maps to the column with the same name, "name".
-	private String name;
+    // No annotation needed: maps to the column with the same name, "name".
+    private String name;
 
-	// For Hibernate only. protected = our own code can't easily create a half-empty Project.
-	protected Project() {
-	}
+    // For Hibernate only. protected = our own code can't easily create a half-empty Project.
+    protected Project() {
+    }
 
-	// For our own code and tests: a complete Project in one step.
-	public Project(Long id, String name) {
-		this.id = id;
-		this.name = name;
-	}
+    // For our own code and tests: a complete Project in one step.
+    public Project(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
-	/*
-	 * Getters. The record generated id() and name() for us; a class doesn't.
-	 * Jackson finds getXxx() methods to build the JSON {"id":1,"name":"..."}.
-	 * Without them the controller would return an empty object.
-	 */
-	public Long getId() {
-		return id;
-	}
+    /*
+     * Getters. The record generated id() and name() for us; a class doesn't.
+     * Jackson finds getXxx() methods to build the JSON {"id":1,"name":"..."}.
+     * Without them the controller would return an empty object.
+     */
+    public Long getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 }

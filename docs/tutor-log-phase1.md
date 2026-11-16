@@ -13,9 +13,11 @@
 |---|---|---|
 | Tests run in [master].[dbo], not an app database | Deliberate shortcut | Phase 2 (init script creates appdata) |
 | Limit 300 lives in V3 and in test (301); no Java validation | DB is last line of defence only | Phase 2: @Size(max=300) + shared constant, 400 instead of DB error |
-| Mixed tabs/spaces; learner prefers spaces | Cosmetic | Any time: one reformat pass |
-| @Transactional rollback in tests | Used but not proven | Phase 1, optional experiment |
-| Comment above ProjectEndToEndTest names wrong cause ("services wait") | Learner's words, partly right | Phase 1, next session (tiny) |
+| @Transactional rollback in tests | Used but not proven | Sprint 1 step 2 (CRUD tests) |
+| ~~Comment above ProjectEndToEndTest~~ | Done (learner rewrote it; typo fixed 2026-11-16) | – |
+| ~~Mixed tabs/spaces~~ | Done 2026-11-16, 4 spaces | – |
+
+Phase 1 closes inside sprint 1 (plan switched from phases to sprints). New log: docs/tutor-log-sprint1.md.
 | RANDOM_PORT starts a 2nd Spring context (+ likely 2nd SQL Server container), ~7s | Harmless now; unverified | Phase 2 CI speed |
 
 ## How the learner did

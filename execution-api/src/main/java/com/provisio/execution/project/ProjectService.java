@@ -20,8 +20,8 @@ public class ProjectService {
 
         this.projectRepository = projectRepository;
     }
-	public Optional<Project> findById(Long id) {
+    public Optional<Project> findById(Long id) {
 
         return this.projectRepository.findById(id);
-	}
+    }
 }

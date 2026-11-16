@@ -22,28 +22,28 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class ProjectServiceTest {
 
-	// Spring fills these fields with the beans. Fine in tests; production code uses constructor injection.
-	@Autowired
-	ProjectService service;
+    // Spring fills these fields with the beans. Fine in tests; production code uses constructor injection.
+    @Autowired
+    ProjectService service;
 
-	@Autowired
-	ProjectRepository repository;
+    @Autowired
+    ProjectRepository repository;
 
-	@Test
-	void findByIdReturnsSavedProject() {
-		// null id = the database picks it (IDENTITY).
-		Project saved = repository.save(new Project(null, "Apollo"));
+    @Test
+    void findByIdReturnsSavedProject() {
+        // null id = the database picks it (IDENTITY).
+        Project saved = repository.save(new Project(null, "Apollo"));
 
-		Optional<Project> found = service.findById(saved.getId());
+        Optional<Project> found = service.findById(saved.getId());
 
-		assertThat(found).isPresent();
-		assertThat(found.get().getName()).isEqualTo("Apollo");
-	}
+        assertThat(found).isPresent();
+        assertThat(found.get().getName()).isEqualTo("Apollo");
+    }
 
-	@Test
-	void findByIdReturnsEmptyForUnknownId() {
-		assertThat(service.findById(999_999L)).isEmpty();
-	}
+    @Test
+    void findByIdReturnsEmptyForUnknownId() {
+        assertThat(service.findById(999_999L)).isEmpty();
+    }
 
     @Test
     void saveRejectsNameLongerThan300Chars() {

@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Import;
 @Import(TestcontainersConfiguration.class)
 class ExecutionApiApplicationTests {
 
-	// Empty on purpose: fails if the app can't start (missing bean, bad config, no database...).
-	@Test
-	void contextLoads() {
-	}
+    // Empty on purpose: fails if the app can't start (missing bean, bad config, no database...).
+    @Test
+    void contextLoads() {
+    }
 }
