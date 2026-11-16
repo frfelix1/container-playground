@@ -1,5 +1,23 @@
 # Tutor log: sprint 1
 
+## Where we stopped (2026-11-16, end of session) — READ FIRST
+- Branch `sprint1/compose` (from main, pushed, no PR yet). PRs #8, #9, #10 merged. 21 tests green.
+- Step 4 is BUILT but the learner has NOT run it yet. Resume with the step 4 handout below, in this order:
+  1. Reading: `compose.yaml` comments; key lines 26 (sqlcmd healthcheck), 39-43 (depends_on service_healthy), 49 (datasource URL, host "sqlserver"), 56 (API healthcheck).
+  2. Experiments, predict first: (1) `docker compose up -d --build --wait` + `ps`: which is healthy first; (2) curl CRUD: POST, GET, PUT, DELETE twice (204 then 404), POST blank name (400); (3) `down` vs `down -v`: does data survive; (4) `docker compose exec execution-api getent hosts sqlserver` vs from the Mac.
+  3. Break-it: replace lines 39-43 with `depends_on: [sqlserver]`, `down -v`, `up -d --build` (no --wait), diagnose with `ps -a` and `logs`. Race may not trigger (SQL Server healthy in ~6s); if it works, discuss why.
+  4. Check questions: predictions vs results; break-it log line; why `$$` on line 26.
+  5. Learner's 3 lines -> open PR for sprint1/compose.
+- Then step 5 (CI, shallow), step 6 (README/ADR/badge), step 7 (end of sprint).
+- Local `.env` exists with the example password (git-ignored).
+- How this learner works best (keep doing):
+  - Review mode: tutor writes code + tests; learner reads, predicts, runs, does one break-it, writes 3 lines.
+  - Give the mental model BEFORE asking a prediction. Cold predictions fail and demotivate.
+  - Medium tier: one batch per step (files + commands + experiments), check questions collected at the end.
+  - Explain every flag; paste file paths + line numbers; tell him to `:checktime` after tutor edits (stale nvim buffers confused him once).
+  - After each feature, a plain "what we added" table. He loses track otherwise, and he tends to skip the "could break it" line.
+  - Motivation is fragile: keep steps short, aim for something visible each session.
+
 ## Steps
 | # | Step | Tier | Status |
 |---|---|---|---|
