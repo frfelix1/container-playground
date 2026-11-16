@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -49,5 +50,16 @@ class ProjectControllerTest {
 
         mvc.perform(get("/projects/99"))
                 .andExpect(status().isNotFound());
+    }
+
+    // Sprint 1, kata 2b: GET /projects returns a JSON array of all projects.
+    @Test
+    void listProjectsReturnsJsonArray() throws Exception {
+        given(projectService.findAll()).willReturn(List.of(new Project(1L, "Apollo"), new Project(2L, "Gemini")));
+
+        mvc.perform(get("/projects"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[1].name").value("Gemini"));
     }
 }

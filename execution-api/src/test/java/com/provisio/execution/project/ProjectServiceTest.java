@@ -3,6 +3,7 @@ package com.provisio.execution.project;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.provisio.execution.TestcontainersConfiguration;
@@ -43,6 +44,21 @@ class ProjectServiceTest {
     @Test
     void findByIdReturnsEmptyForUnknownId() {
         assertThat(service.findById(999_999L)).isEmpty();
+    }
+
+    /*
+     * Sprint 1, kata 2a: list all projects.
+     * containsExactly (not just "contains") also proves the rollback: if rows
+     * from the other tests in this class survived, the list would have extras.
+     */
+    @Test
+    void findAllReturnsEverySavedProject() {
+        repository.save(new Project(null, "Apollo"));
+        repository.save(new Project(null, "Gemini"));
+
+        List<Project> all = service.findAll();
+
+        assertThat(all).extracting(Project::getName).containsExactlyInAnyOrder("Apollo", "Gemini");
     }
 
     @Test

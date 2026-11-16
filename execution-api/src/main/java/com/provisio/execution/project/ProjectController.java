@@ -1,4 +1,5 @@
 package com.provisio.execution.project;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,4 +42,9 @@ public class ProjectController {
         .map(ResponseEntity::ok)
         .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @GetMapping
+    public List<Project> findAll() {
+        return this.projectService.findAll();
+    } 
 }

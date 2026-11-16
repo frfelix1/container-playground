@@ -1,5 +1,6 @@
 package com.provisio.execution.project;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -24,4 +25,8 @@ public class ProjectService {
 
         return this.projectRepository.findById(id);
     }
+
+    public List<Project> findAll() {
+        return this.projectRepository.findAll();
+    } 
 }
