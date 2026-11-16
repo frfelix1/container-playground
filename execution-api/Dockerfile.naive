@@ -1,0 +1,22 @@
+# NAIVE Dockerfile: works, but every habit here is one we fix in ./Dockerfile.
+# Build from the repo root (the parent POM lives there):
+#   docker build -f execution-api/Dockerfile.naive -t execution-api:naive .
+
+# Problem 1: the full JDK (compiler, tools) ships to production, though running needs only a JRE.
+FROM eclipse-temurin:21-jdk
+
+WORKDIR /app
+
+# Problem 2: copy EVERYTHING first. Any changed file (even a comment) invalidates
+# this layer, so every step below, including downloading all dependencies, reruns.
+COPY . .
+
+# Build the jar. -DskipTests: Testcontainers needs a Docker daemon, which a build has not.
+# Tests run in CI (step 5) instead, before the image is built.
+# Problem 3: Maven, its ~/.m2 download cache and the source code all stay in the image.
+RUN ./mvnw -pl execution-api -am package -DskipTests
+
+# Problem 4: one fat jar = one layer. Change one line of Java and the whole
+# ~60 MB jar is a new layer to push and pull.
+# Problem 5: no USER line, so the app runs as root inside the container.
+ENTRYPOINT ["java", "-jar", "execution-api/target/execution-api-0.0.1-SNAPSHOT.jar"]

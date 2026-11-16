@@ -1,0 +1,12 @@
+# What `docker build` does NOT send to the builder (the "build context").
+# Smaller context = faster builds, and local junk can't leak into the image.
+**/target/
+.git/
+.idea/
+.vscode/
+**/.classpath
+**/.project
+**/.settings/
+**/.factorypath
+.env
+docs/

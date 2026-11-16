@@ -5,7 +5,7 @@
 |---|---|---|---|
 | 1 | Close phase 1: typo, reformat, PR with 3-line explanation, merge | shallow | done (PR #8) |
 | 2 | CRUD projects (list, create @Valid/@Size(max=300) -> 400, update, delete), then records | deep | projects done (PR #9); records later |
-| 3 | Dockerfile naive vs layered, MaxRAMPercentage, 1 break-it | medium | planned |
+| 3 | Dockerfile naive vs layered, MaxRAMPercentage, 1 break-it | medium | done |
 | 4 | Compose: SQL Server + execution-api with healthchecks, 1 break-it | medium | |
 | 5 | GitHub Actions: verify, build, Trivy, push GHCR by SHA | shallow | |
 | 6 | README (diagram, quick start, badge), ADR 0001 (SQL Server amd64 under emulation) | shallow | |
@@ -33,6 +33,10 @@
 - Naive (single stage, JDK, fat jar) vs optimized (multi-stage, JRE, layered jar via `java -Djarmode=tools extract --layers`), non-root.
 - Experiments: image size, rebuild time after a one-line Java change, `docker history`, MaxRAMPercentage with `--memory`.
 - App needs SQL Server to start, so "run it for real" is step 4 (Compose). Step 3 proves the JVM in the container only.
+- Built (tutor, 2026-11-16): naive 1.1GB, optimized 580MB, both ~18s cold. MaxHeapSize 384MB at --memory=512m (75%). uid 10001. Startup fails "Failed to determine a suitable driver class" (no datasource URL) = expected.
+- Learner to do: 4 experiments (size, rebuild after 1-line change, docker history, 25% vs 75% heap) + break-it (remove the spring-boot-loader COPY).
+- Results: size prediction "half" right, reason wrong (thought deps; really JDK + Maven + .m2). Confused by "9/9 vs 23/23" step counter -> explained. docker history needed full explanation. Heap: didn't know how to approach; given the 25%/75% facts, understood. Break-it: predicted loader layer correctly, saw build OK + run fails, exit 1, ls proof. Layer-chain cache invalidation seen in output.
+- 3 lines: learner gave what/why in loose words, tutor shaped them; "could break" supplied from his lab. Pattern: learner skips the "could break" line.
 
 ## Open items
 | Item | Why deferred | Target |
