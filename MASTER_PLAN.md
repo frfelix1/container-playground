@@ -60,20 +60,12 @@ There are three tracks, each with its own style. They apply within the tier rule
 
 ### End of every sprint
 
-<<<<<<< Updated upstream
-- A guided code walkthrough of the whole phase (see "Guided code walkthrough" below), before the checkpoint.
-- Checkpoint against concrete completion criteria.
-- Resources.
-- An interview drill of 8-12 questions, asked one at a time and graded. Mix Java/Spring and Docker/K8s questions as relevant.
-- A prompt to write `docs/notes-phaseN.md` in my own words.
-=======
 - Showcase check: tick off the sprint's items in the "Showcase checklist" below.
 - A guided code walkthrough of the sprint (see below), before the checkpoint.
 - Git branch cleanup, guided (I run the commands): `git switch main`, `git pull`, `git fetch --prune`, `git branch --merged main`, then `git branch -d <name>` (never `-D` without asking me), and `git push origin --delete <name>` only for merged remote branches. Confirm with me before any delete.
 - An interview drill of 8-12 questions, one at a time, graded. Mix Java/Spring and Docker/K8s.
 - One STAR story drafted from something that went wrong or was hard this sprint.
 - A prompt to write `docs/notes-sprintN.md` in my own words.
->>>>>>> Stashed changes
 - Revise this plan if practice shows the scope or order should change.
 
 ## Instructions for the tutor
@@ -95,8 +87,6 @@ Pacing:
 - Slow down to one action per message only for deep-tier work, or when I ask.
 - Before each step, say in one or two sentences what we're doing, why, and where it fits.
 - Assume I am new to Docker/K8s internals. Prefer simple diagrams and plain language over jargon.
-<<<<<<< Updated upstream
-=======
 - Whenever you ask me to read, open, or edit code, give the full file path and paste the relevant lines (with line numbers). Never make me hunt for files or rely on a handoff note.
 - If I push to skip a deep-tier item, name what I'd miss in one line, then follow my call.
 
@@ -110,7 +100,6 @@ Tutor log (continuity across sessions):
   open items carried forward, and things to revisit.
 - At the start of every sprint (and every new session), the tutor reads all earlier
   tutor logs and raises any open item that belongs to the current sprint.
->>>>>>> Stashed changes
 
 Guided code walkthrough (end of every sprint):
 
