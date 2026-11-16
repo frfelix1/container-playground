@@ -28,5 +28,34 @@ public class ProjectService {
 
     public List<Project> findAll() {
         return this.projectRepository.findAll();
-    } 
+    }
+
+    // id null = "new row": save() does an INSERT and SQL Server picks the id (IDENTITY).
+    public Project create(String name) {
+        return this.projectRepository.save(new Project(null, name));
+    }
+
+    /*
+     * Find, change, save. save() on an entity that has an id does an UPDATE.
+     * Empty Optional = "no such project"; the controller turns that into 404.
+     */
+    public Optional<Project> update(Long id, String name) {
+        return this.projectRepository.findById(id)
+                .map(project -> {
+                    project.setName(name);
+                    return this.projectRepository.save(project);
+                });
+    }
+
+    /*
+     * true = deleted, false = it didn't exist. Checking first is two queries
+     * instead of one; fine here, and it keeps "not found" out of exception handling.
+     */
+    public boolean delete(Long id) {
+        if (!this.projectRepository.existsById(id)) {
+            return false;
+        }
+        this.projectRepository.deleteById(id);
+        return true;
+    }
 }

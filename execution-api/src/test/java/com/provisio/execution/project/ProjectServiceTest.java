@@ -61,6 +61,44 @@ class ProjectServiceTest {
         assertThat(all).extracting(Project::getName).containsExactlyInAnyOrder("Apollo", "Gemini");
     }
 
+    // ---- Kata 3: create, update, delete (real SQL Server) ----
+
+    @Test
+    void createSavesProjectAndAssignsId() {
+        Project created = service.create("Apollo");
+
+        assertThat(created.getId()).isNotNull();
+        assertThat(repository.findById(created.getId())).isPresent();
+    }
+
+    @Test
+    void updateChangesName() {
+        Project saved = repository.save(new Project(null, "Apollo"));
+
+        Optional<Project> updated = service.update(saved.getId(), "Gemini");
+
+        assertThat(updated).isPresent();
+        assertThat(repository.findById(saved.getId()).get().getName()).isEqualTo("Gemini");
+    }
+
+    @Test
+    void updateUnknownIdReturnsEmpty() {
+        assertThat(service.update(999_999L, "Gemini")).isEmpty();
+    }
+
+    @Test
+    void deleteRemovesProject() {
+        Project saved = repository.save(new Project(null, "Apollo"));
+
+        assertThat(service.delete(saved.getId())).isTrue();
+        assertThat(repository.findById(saved.getId())).isEmpty();
+    }
+
+    @Test
+    void deleteUnknownIdReturnsFalse() {
+        assertThat(service.delete(999_999L)).isFalse();
+    }
+
     @Test
     void saveRejectsNameLongerThan300Chars() {
         
