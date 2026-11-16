@@ -3,9 +3,9 @@
 ## Steps
 | # | Step | Tier | Status |
 |---|---|---|---|
-| 1 | Close phase 1: typo, reformat, PR with 3-line explanation, merge | shallow | in progress |
-| 2 | CRUD projects (list, create @Valid/@Size(max=300) -> 400, update, delete), then records | deep | |
-| 3 | Dockerfile naive vs layered, MaxRAMPercentage, 1 break-it | medium | |
+| 1 | Close phase 1: typo, reformat, PR with 3-line explanation, merge | shallow | done (PR #8) |
+| 2 | CRUD projects (list, create @Valid/@Size(max=300) -> 400, update, delete), then records | deep | projects done (PR #9); records later |
+| 3 | Dockerfile naive vs layered, MaxRAMPercentage, 1 break-it | medium | planned |
 | 4 | Compose: SQL Server + execution-api with healthchecks, 1 break-it | medium | |
 | 5 | GitHub Actions: verify, build, Trivy, push GHCR by SHA | shallow | |
 | 6 | README (diagram, quick start, badge), ADR 0001 (SQL Server amd64 under emulation) | shallow | |
@@ -24,6 +24,15 @@
 - Learner unmotivated by fill-in-the-blanks ("won't write tests like this with AI"). Switched to REVIEW MODE (MASTER_PLAN updated): AI writes tests+code, learner reviews, writes 3 lines, does break-it. Then quick wins (steps 3-6) for something showable.
 - Kata 3 implemented by tutor, 21 tests green. execution-api/pom.xml reformatted to spaces.
 - Step 2 remaining: learner's @Valid break-it + 3 lines; records CRUD (tutor writes, learner reviews) can follow later.
+- Review answers: verify/never correct; Optional.map partial ("loop of 0..1", missed why not if/get); DTO-hides-id wrong (pointed at no setId), spoiled on request.
+- Learner didn't know why @Valid exists -> explained two gates (Jackson, Validator). Then predicted correctly: tests 90 + 101 break, 500. Twist seen: Errors not Failures, MockMvc rethrows NPE (no servlet error handling). Third "slice test != real server" example.
+- Learner lost track of what the branch added; tutor gave plain table + draft lines. Learner rewrote them himself (good: break-it line in own words). "Why" was weak ("need for later"). PR #9.
+- Lesson for tutor: give the mental model BEFORE any prediction; batch was still too much at once. Summarize "what we added" in a table after each feature.
+
+## Step 3 plan (Dockerfile)
+- Naive (single stage, JDK, fat jar) vs optimized (multi-stage, JRE, layered jar via `java -Djarmode=tools extract --layers`), non-root.
+- Experiments: image size, rebuild time after a one-line Java change, `docker history`, MaxRAMPercentage with `--memory`.
+- App needs SQL Server to start, so "run it for real" is step 4 (Compose). Step 3 proves the JVM in the container only.
 
 ## Open items
 | Item | Why deferred | Target |
