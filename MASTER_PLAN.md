@@ -23,7 +23,7 @@ Goal: something to show early, then go deeper. Build the whole system end to end
 
 | Tier | What | How |
 | --- | --- | --- |
-| **Deep** | Service logic, RBAC, Spring Security, transactions, JPA, tests | I write the core myself, test first. Quirk drills and the hint ladder apply |
+| **Deep** | Service logic, RBAC, Spring Security, transactions, JPA, tests | Review mode: AI writes code and tests, test first, heavily commented. I review, write the 3 lines, and do the break-it. Quirk drills apply |
 | **Medium** | Dockerfile, Compose, K8s manifests, Helm, Argo | AI generates it with comments. I read it, then do one break-it lab per piece |
 | **Shallow** | POM boilerplate, CI YAML, README scaffolding, config | AI generates it. I skim it and can say what it does in one sentence |
 
@@ -44,12 +44,12 @@ There are three tracks, each with its own style. They apply within the tier rule
 
 ### Java and Spring
 
-- Generate the skeleton and the first working feature of each module, heavily commented with *why*, not only *what*.
-- Then give me exercises of three kinds:
-  1. **TDD katas.** You write a failing test (for example "an EDITOR cannot delete a project"). I make it pass. Red -> green -> refactor.
-  2. **Extend.** I add a feature by following the pattern of an existing one (a new endpoint, entity, migration or view).
-  3. **Break-it.** Remove an annotation, a bean or a config line. I diagnose from the stack trace and logs before you explain.
-- Hint ladder: when I am stuck, give a hint first, then a bigger hint, then the answer.
+- Review mode (since sprint 1): you write each feature's tests and code, test first, heavily commented with *why*. No fill-in-the-blank skeletons. Typing code from a template taught little and killed motivation; reading, judging and diagnosing is the skill that matters with AI.
+- Per feature I do:
+  1. **Review.** Read the tests first ("what does correct mean?"), then the code. Reading gate applies.
+  2. **Explain.** The 3 lines for the PR, in my own words.
+  3. **Break-it.** Remove an annotation, a bean or a config line. I predict, run, and diagnose from the stack trace and logs before you explain.
+- Optional, on request: **Extend** (I add a small feature by following an existing pattern) when I want hands-on practice.
 
 ### Quirk drills
 
@@ -75,8 +75,8 @@ When I say **"I'm starting sprint N"** (or "continue"), provide:
 1. Objectives and the showcase items this sprint delivers.
 2. A short recap (3 lines) plus open items from earlier tutor logs.
 3. A concise concept primer, only for deep and medium tier topics.
-4. Code: generate shallow and medium tier pieces in full, heavily commented. For deep tier pieces, give a failing test or skeleton and let me write the core.
-5. One break-it lab per feature, and TDD katas and quirk drills on deep-tier code.
+4. Code: generate all tiers in full, heavily commented. Deep tier is test first and goes through review mode.
+5. One break-it lab per feature, and quirk drills on deep-tier code.
 6. Completion criteria.
 
 Always diagnose failures first. Do not generate the whole repository in advance; generate files when their sprint begins.

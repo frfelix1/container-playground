@@ -60,4 +60,9 @@ public class Project {
     public String getName() {
         return name;
     }
+
+    // Only name gets a setter: id belongs to the database and must never change.
+    public void setName(String name) {
+        this.name = name;
+    }
 }
