@@ -1,0 +1,63 @@
+# The whole local system, one command: docker compose up --build
+# Compose puts both services on one private network, where each service name
+# is also a hostname: execution-api reaches the database at "sqlserver".
+
+services:
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    # The image exists only for amd64; on Apple Silicon it runs under emulation (Rosetta).
+    platform: linux/amd64
+    environment:
+      ACCEPT_EULA: "Y"
+      # ${...} comes from the .env file next to this one (see .env.example).
+      # The :? makes Compose stop with this message if the value is missing.
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?copy .env.example to .env}
+    ports:
+      # host:container. Lets tools on your Mac (Azure Data Studio, DBeaver) connect.
+      - "1433:1433"
+    volumes:
+      # Named volume: the data survives "docker compose down" (but not "down -v").
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      # "Healthy" = it answers a real query, not just "the process started".
+      # -C trusts the self-signed certificate, -b turns a SQL error into exit code 1.
+      # $$ = a literal $ for the shell inside the container (one $ would be filled in by Compose).
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q 'SELECT 1' -b"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      # Checks that fail during the first 30s don't count: SQL Server is slow to boot, more so emulated.
+      start_period: 30s
+
+  execution-api:
+    build:
+      # Build from the repo root, because the parent pom.xml lives there.
+      context: .
+      dockerfile: execution-api/Dockerfile
+    image: execution-api:dev
+    depends_on:
+      sqlserver:
+        # Wait until the healthcheck passes. Plain depends_on only waits for "started",
+        # and the app would crash because SQL Server isn't accepting logins yet.
+        condition: service_healthy
+    environment:
+      # Spring Boot maps these to properties: SPRING_DATASOURCE_URL -> spring.datasource.url.
+      # "sqlserver" is the service name above, resolved by Compose's built-in DNS.
+      # trustServerCertificate: the dev server's certificate is self-signed.
+      # shortcut: uses the master database and the sa admin login; sprint 2 adds an appdata database with its own restricted login.
+      SPRING_DATASOURCE_URL: jdbc:sqlserver://sqlserver:1433;databaseName=master;encrypt=true;trustServerCertificate=true
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: ${MSSQL_SA_PASSWORD}
+    ports:
+      - "8080:8080"
+    healthcheck:
+      # shortcut: checks GET /projects; sprint 3 switches to Actuator's /actuator/health.
+      test: ["CMD", "curl", "-fs", "http://localhost:8080/projects"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  sqlserver-data:
