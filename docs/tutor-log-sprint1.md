@@ -1,9 +1,9 @@
 # Tutor log: sprint 1
 
 ## Where we stopped (2026-11-19, end of session) — READ FIRST
-- Steps 1-4, 6, 7 done (PRs #8-#11, #13; notes on branch `sprint1/notes`). Tutor log lives on `sprint1/ci` (PR #12, draft) until CI merges.
-- Step 5 BLOCKED: GitHub account locked for Actions (billing flag, $0 owed, support ticket open). When unlocked: re-run PR #12 (`./mvnw -B verify`), add build + Trivy + GHCR push, then README CI badge. Packages budget also shows "blocked": re-check.
-- Next after unlock: finish step 5, then sprint 2. Carry: records CRUD, own DB + login instead of `master`, STAR story.
+- Steps 1-4, 6, 7 done (PRs #8-#13, notes + badge PR from `sprint1/notes`).
+- Step 5 PARTIAL: account lock resolved (expired student plan -> Free). `ci.yml` verify job green on main in ~1 min (run 44528369492). README CI badge added. Still to do: image build, Trivy scan, GHCR push by SHA (shallow). Packages budget showed "blocked" earlier: re-check on first push.
+- Next: sprint 2. Carry: step 5 remainder (build/Trivy/GHCR), records CRUD, own DB + login instead of `master`, STAR story (CI-lock story now has an ending).
 - Local `.env` exists with the example password (git-ignored).
 - How this learner works best (keep doing):
   - ONE small step per message (one experiment, then wait for output). Big handouts overwhelm him (his request).
@@ -24,8 +24,8 @@
 | 2 | CRUD projects (list, create @Valid/@Size(max=300) -> 400, update, delete), then records | deep | projects done (PR #9); records later |
 | 3 | Dockerfile naive vs layered, MaxRAMPercentage, 1 break-it | medium | done |
 | 4 | Compose: SQL Server + execution-api with healthchecks, 1 break-it | medium | done (PR #11) |
-| 5 | GitHub Actions: verify, build, Trivy, push GHCR by SHA | shallow | BLOCKED: verify job written (PR #12 draft); account lock, support ticket open |
-| 6 | README (diagram, quick start, badge), ADR 0001 (SQL Server amd64 under emulation) | shallow | done (PR #13), badge waits for CI |
+| 5 | GitHub Actions: verify, build, Trivy, push GHCR by SHA | shallow | PARTIAL: verify green (PR #12); build/Trivy/GHCR carried to sprint 2 |
+| 6 | README (diagram, quick start, badge), ADR 0001 (SQL Server amd64 under emulation) | shallow | done (PR #13), badge added after unlock |
 | 7 | End of sprint: walkthrough, branch cleanup, drill, STAR story, notes-sprint1.md | - | done; STAR skipped |
 
 ## Session 2026-11-16
@@ -96,4 +96,5 @@
 - Strong: Compose readiness, Flyway/Hibernate roles, predictions when given a model first.
 - Partial: Docker internals vocabulary (multi-stage, build context, JVM memory), HTTP status reasoning.
 - Gaps: Optional (repeat), test realism (H2 vs real DB).
-- Carry forward: step 5 CI (blocked), records CRUD, own DB instead of master, STAR story.
+- Carry forward: step 5 remainder (build/Trivy/GHCR), records CRUD, own DB instead of master, STAR story.
+- Unlock: cause was an expired student plan; account back on Free, Actions run on the public repo.
