@@ -1,8 +1,9 @@
 # Tutor log: sprint 1
 
 ## Where we stopped (2026-11-19, end of session) — READ FIRST
-- Steps 1-4 done. PRs #8, #9, #10, #11 merged. 21 tests green. Log update on branch `sprint1/ci`.
-- Next: step 5 (GitHub Actions: verify, build, Trivy, push GHCR by SHA), shallow tier. Then step 6 (README/ADR/badge), step 7 (end of sprint).
+- Steps 1-4, 6, 7 done (PRs #8-#11, #13; notes on branch `sprint1/notes`). Tutor log lives on `sprint1/ci` (PR #12, draft) until CI merges.
+- Step 5 BLOCKED: GitHub account locked for Actions (billing flag, $0 owed, support ticket open). When unlocked: re-run PR #12 (`./mvnw -B verify`), add build + Trivy + GHCR push, then README CI badge. Packages budget also shows "blocked": re-check.
+- Next after unlock: finish step 5, then sprint 2. Carry: records CRUD, own DB + login instead of `master`, STAR story.
 - Local `.env` exists with the example password (git-ignored).
 - How this learner works best (keep doing):
   - ONE small step per message (one experiment, then wait for output). Big handouts overwhelm him (his request).
@@ -24,8 +25,8 @@
 | 3 | Dockerfile naive vs layered, MaxRAMPercentage, 1 break-it | medium | done |
 | 4 | Compose: SQL Server + execution-api with healthchecks, 1 break-it | medium | done (PR #11) |
 | 5 | GitHub Actions: verify, build, Trivy, push GHCR by SHA | shallow | BLOCKED: verify job written (PR #12 draft); account lock, support ticket open |
-| 6 | README (diagram, quick start, badge), ADR 0001 (SQL Server amd64 under emulation) | shallow | |
-| 7 | End of sprint: walkthrough, branch cleanup, drill, STAR story, notes-sprint1.md | - | |
+| 6 | README (diagram, quick start, badge), ADR 0001 (SQL Server amd64 under emulation) | shallow | done (PR #13), badge waits for CI |
+| 7 | End of sprint: walkthrough, branch cleanup, drill, STAR story, notes-sprint1.md | - | done; STAR skipped |
 
 ## Session 2026-11-16
 - MASTER_PLAN.md on main had leftover stash-conflict markers; resolved keeping the sprint version (PR #7, branch docs/fix-plan-conflict).
@@ -82,3 +83,17 @@
 - Correction: repo ROOT has mvnw + parent pom.xml (multi-module). ci.yml fixed to `./mvnw -B verify` from root (no working-directory). Untested until unlock.
 - Open: 9 committed `*.tmp` files (8 under execution-api/src + pom.xml.tmp), likely reformat leftovers. Asked learner before deleting.
 - Moved on to step 6 on branch `sprint1/docs` (badge skipped for now).
+- Step 6 (PR #13): README quick start (`up --build -d --wait`), Mermaid diagram, ADR 0001 in docs/adr/. Deleted 9 empty committed *.tmp files, `*.tmp` in .gitignore. README not run end to end yet (learner will when expanding it).
+- Predictions: `up -d` not ready immediately (correct -> added --wait); start_period "harmless" (correct; explained it adds zero wait).
+- Walkthrough POST /projects: 201 + Location /projects/1. flyway_schema_history 3 rows correct (after down -v). Flow explain-back: skeleton right; missed service/repository split, DB-generated id, Compose DNS.
+- Shortcut found: API uses `master` DB (compose.yaml:49). Target: sprint 2/3, own DB + login per service (MASTER_PLAN).
+- Branch cleanup: 10 merged branches deleted local + remote. Kept main, sprint1/ci.
+- Drill (8): strong Q3 depends_on healthy, Q6 ddl-auto validate. Partial Q1 multi-stage, Q2 @Valid (no status codes), Q5 MaxRAMPercentage (missed non-heap -> OOMKilled), Q7 .dockerignore. Gap Q4 Optional (2nd time, revisit), Q8 H2 vs Testcontainers.
+- STAR skipped (learner: not useful now). Draft fill-in was the CI-lock diagnosis story; offer again once CI is green.
+- notes-sprint1.md: learner too tired to write; picked from A/B/C/D options, tutor assembled on `sprint1/notes`. Works well when motivation is low.
+
+## End of sprint 1 assessment
+- Strong: Compose readiness, Flyway/Hibernate roles, predictions when given a model first.
+- Partial: Docker internals vocabulary (multi-stage, build context, JVM memory), HTTP status reasoning.
+- Gaps: Optional (repeat), test realism (H2 vs real DB).
+- Carry forward: step 5 CI (blocked), records CRUD, own DB instead of master, STAR story.
