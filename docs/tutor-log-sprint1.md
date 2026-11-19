@@ -23,7 +23,7 @@
 | 2 | CRUD projects (list, create @Valid/@Size(max=300) -> 400, update, delete), then records | deep | projects done (PR #9); records later |
 | 3 | Dockerfile naive vs layered, MaxRAMPercentage, 1 break-it | medium | done |
 | 4 | Compose: SQL Server + execution-api with healthchecks, 1 break-it | medium | done (PR #11) |
-| 5 | GitHub Actions: verify, build, Trivy, push GHCR by SHA | shallow | |
+| 5 | GitHub Actions: verify, build, Trivy, push GHCR by SHA | shallow | BLOCKED: verify job written (PR #12 draft); account lock, support ticket open |
 | 6 | README (diagram, quick start, badge), ADR 0001 (SQL Server amd64 under emulation) | shallow | |
 | 7 | End of sprint: walkthrough, branch cleanup, drill, STAR story, notes-sprint1.md | - | |
 
@@ -72,3 +72,11 @@
 |---|---|---|
 | ~~Prove @Transactional test rollback~~ | Done in kata 2 | - |
 | Tests run in [master].[dbo] | Needs init script | Sprint 2 |
+
+## Session 2026-11-19
+- Recap given. DB check: tests use Testcontainers (TestcontainersConfiguration.java), so CI needs no DB service; runner Docker pulls mssql. No mvnw in repo -> CI uses runner's `mvn`.
+- Wrote `.github/workflows/ci.yml` with verify job only (checkout, setup-java 21 temurin + maven cache, `mvn -B verify`). Commit a8cbb17, draft PR #12.
+- Prediction "first run slower" correct; explained fresh VM + `cache: maven`.
+- Runs blocked: "account is locked due to a billing issue". GitHub Free, $0 owed, no card, $0 budgets (keep them). Repo made PUBLIC (history checked: no secrets); still locked -> account flag. Support ticket opened. Learner declined `act`.
+- When unlocked: re-run PR #12, then add build + Trivy + GHCR push (Packages budget also shows blocked, re-check). Add CI badge in README then.
+- Moved on to step 6 on branch `sprint1/docs` (badge skipped for now).
