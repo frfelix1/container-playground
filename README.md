@@ -2,6 +2,17 @@
 
 Spring Boot API (`execution-api`) on SQL Server, packaged with Docker and run with Compose.
 
+## Architecture
+
+```mermaid
+flowchart LR
+    client[curl / client] -->|HTTP :8080<br>/projects| api
+    subgraph compose[docker compose]
+        api[execution-api<br>Spring Boot, Java 21] -->|JDBC :1433| db[(SQL Server 2022<br>amd64, ADR 0001)]
+    end
+    api -. Flyway migrations<br>on startup .-> db
+```
+
 ## Quick start
 
 Needs Docker. On Apple Silicon, SQL Server runs under emulation (slow first start).
