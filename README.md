@@ -17,3 +17,7 @@ Run the tests (they start their own SQL Server via Testcontainers):
 ```sh
 ./mvnw verify
 ```
+
+## Decisions
+
+- [ADR 0001: SQL Server as amd64 under emulation](docs/adr/0001-sql-server-amd64-emulation.md)
