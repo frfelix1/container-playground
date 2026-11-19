@@ -6,3 +6,4 @@ target/
 .classpath
 .settings/
 .factorypath
+*.tmp
