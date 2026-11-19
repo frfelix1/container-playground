@@ -1,5 +1,7 @@
 # container-playground
 
+[![ci](https://github.com/frfelix1/container-playground/actions/workflows/ci.yml/badge.svg)](https://github.com/frfelix1/container-playground/actions/workflows/ci.yml)
+
 Spring Boot API (`execution-api`) on SQL Server, packaged with Docker and run with Compose.
 
 ## Architecture
