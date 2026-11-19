@@ -79,4 +79,6 @@
 - Prediction "first run slower" correct; explained fresh VM + `cache: maven`.
 - Runs blocked: "account is locked due to a billing issue". GitHub Free, $0 owed, no card, $0 budgets (keep them). Repo made PUBLIC (history checked: no secrets); still locked -> account flag. Support ticket opened. Learner declined `act`.
 - When unlocked: re-run PR #12, then add build + Trivy + GHCR push (Packages budget also shows blocked, re-check). Add CI badge in README then.
+- Correction: repo ROOT has mvnw + parent pom.xml (multi-module). ci.yml fixed to `./mvnw -B verify` from root (no working-directory). Untested until unlock.
+- Open: 9 committed `*.tmp` files (8 under execution-api/src + pom.xml.tmp), likely reformat leftovers. Asked learner before deleting.
 - Moved on to step 6 on branch `sprint1/docs` (badge skipped for now).
