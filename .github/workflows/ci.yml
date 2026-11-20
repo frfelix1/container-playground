@@ -42,6 +42,7 @@ jobs:
           severity: CRITICAL,HIGH
           ignore-unfixed: true # only fail on vulnerabilities that have a fix available
           exit-code: "1"       # a finding fails the job, so the push below never runs
+          trivyignores: .trivyignore # accepted findings, each with a reason and expiry
       - if: github.ref == 'refs/heads/main'
         uses: docker/login-action@v4
         with:
