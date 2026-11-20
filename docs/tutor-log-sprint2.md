@@ -7,6 +7,8 @@
 - Step 0 on `sprint2/ci-image`: `image` job (needs verify): build with load, Trivy CRITICAL/HIGH fixed-only (pinned SHA), push `ghcr.io/frfelix1/execution-api:<sha>` only on main.
 - Push prediction: half right (GHCR yes), but credited branch protection instead of the `if:` main guard; corrected.
 - Trivy failed: CVE-2026-97054 (Go stdlib) in /usr/bin/pebble. Learner found the target line himself; thought Trivy "stopped" at the finding (corrected: scans all, only failures print). Chose option A: `.trivyignore` with exp:2026-12-31.
+- Trivy prediction: "mentions it but skips" -> corrected: ignored findings are silent unless --show-suppressed.
+- 3 lines written by tutor on learner's request (shallow tier, allowed).
 
 ## Open items
 | Item | Why deferred | Target |
