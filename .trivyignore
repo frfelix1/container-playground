@@ -1,0 +1,5 @@
+# Accepted findings. Each entry needs a reason and an expiry (exp:), after which Trivy fails on it again.
+
+# Go stdlib HTTP/1 bug in /usr/bin/pebble, shipped by the eclipse-temurin base image.
+# Not reachable: the container only runs java, pebble is never started. Remove once the base image is rebuilt.
+CVE-2026-97054 exp:2026-12-31
