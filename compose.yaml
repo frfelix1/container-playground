@@ -3,7 +3,6 @@
 # is also a hostname: execution-api reaches the database at "sqlserver".
 
 services:
-
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     # The image exists only for amd64; on Apple Silicon it runs under emulation (Rosetta).
@@ -23,12 +22,41 @@ services:
       # "Healthy" = it answers a real query, not just "the process started".
       # -C trusts the self-signed certificate, -b turns a SQL error into exit code 1.
       # $$ = a literal $ for the shell inside the container (one $ would be filled in by Compose).
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q 'SELECT 1' -b"]
+      test:
+        [
+          "CMD-SHELL",
+          '/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -Q ''SELECT 1'' -b',
+        ]
       interval: 5s
       timeout: 5s
       retries: 20
       # Checks that fail during the first 30s don't count: SQL Server is slow to boot, more so emulated.
       start_period: 30s
+
+  # One-shot job: runs db/init.sql once SQL Server is healthy, then exits.
+  # Same image only because it already contains sqlcmd; it starts no second database.
+  sqlserver-init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+      APPDATA_DB_PASSWORD: ${APPDATA_DB_PASSWORD:?copy the new lines from .env.example to .env}
+      IAM_DB_PASSWORD: ${IAM_DB_PASSWORD:?copy the new lines from .env.example to .env}
+    volumes:
+      # Bind mount: a file from this repo, read-only (:ro) inside the container.
+      - ./db/init.sql:/init.sql:ro
+    # Replaces the image's own start command (which would start SQL Server).
+    # -S sqlserver: connect to the OTHER container by service name, not localhost.
+    # -i: run this file. -v: fill the $(...) variables in it. -b: exit code 1 on any SQL error.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - >-
+        /opt/mssql-tools18/bin/sqlcmd -C -S sqlserver -U sa -P "$$MSSQL_SA_PASSWORD" -b -i /init.sql
+        -v APPDATA_DB_PASSWORD="$$APPDATA_DB_PASSWORD" IAM_DB_PASSWORD="$$IAM_DB_PASSWORD"
 
   execution-api:
     build:
@@ -37,18 +65,18 @@ services:
       dockerfile: execution-api/Dockerfile
     image: execution-api:dev
     depends_on:
-      sqlserver:
-        # Wait until the healthcheck passes. Plain depends_on only waits for "started",
-        # and the app would crash because SQL Server isn't accepting logins yet.
-        condition: service_healthy
+      sqlserver-init:
+        # Wait until the init job has EXITED with code 0. "healthy" doesn't apply:
+        # a job that finishes is never healthy, it's done.
+        condition: service_completed_successfully
     environment:
       # Spring Boot maps these to properties: SPRING_DATASOURCE_URL -> spring.datasource.url.
       # "sqlserver" is the service name above, resolved by Compose's built-in DNS.
       # trustServerCertificate: the dev server's certificate is self-signed.
-      # shortcut: uses the master database and the sa admin login; sprint 2 adds an appdata database with its own restricted login.
-      SPRING_DATASOURCE_URL: jdbc:sqlserver://sqlserver:1433;databaseName=master;encrypt=true;trustServerCertificate=true
-      SPRING_DATASOURCE_USERNAME: sa
-      SPRING_DATASOURCE_PASSWORD: ${MSSQL_SA_PASSWORD}
+      # Own database + own login (created by db/init.sql): this service can't open iam.
+      SPRING_DATASOURCE_URL: jdbc:sqlserver://sqlserver:1433;databaseName=appdata;encrypt=true;trustServerCertificate=true
+      SPRING_DATASOURCE_USERNAME: appdata_svc
+      SPRING_DATASOURCE_PASSWORD: ${APPDATA_DB_PASSWORD}
     ports:
       - "8080:8080"
     healthcheck:

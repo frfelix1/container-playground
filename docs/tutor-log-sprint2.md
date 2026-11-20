@@ -9,6 +9,13 @@
 - Trivy failed: CVE-2026-97054 (Go stdlib) in /usr/bin/pebble. Learner found the target line himself; thought Trivy "stopped" at the finding (corrected: scans all, only failures print). Chose option A: `.trivyignore` with exp:2026-12-31.
 - Trivy prediction: "mentions it but skips" -> corrected: ignored findings are silent unless --show-suppressed.
 - 3 lines written by tutor on learner's request (shallow tier, allowed).
+- Learner declined the Node 20 bump (checkout/setup-java v4 stay). Step 0 done; first GHCR push hit "denied" on the manifest, a re-run with no change fixed it (likely a first-push race; my "missing access" guess was wrong).
+- Step 1 on `sprint2/db-logins`: db/init.sql (idempotent, sqlcmd vars), `sqlserver-init` one-shot service, execution-api -> appdata/appdata_svc via service_completed_successfully. Tutor smoke test in isolated project `smoke`: up --wait OK, init Exited 0, Flyway tables in appdata, appdata_svc -d iam = "Cannot open database", re-run idempotent.
+- Proposed closing "tests in [master]": the Testcontainers DB is throwaway, sa there exposes nothing. Learner to confirm.
+- Gate: Q1 "user in iam" right (said table, corrected to database). Q2 wrong twice: thought one command runs on the Mac -> SAME misconception as sprint 1 Exp 4 (localhost = the container itself). Explained with diagram; revisit in step 6 DNS lab. Q3 partial (missed "job exits, never healthy").
+- Exp 1 prediction wrong: thought down -v / grep removed passwords (mixed up volume vs .env). Read the ps output with help: Exited (0) = success for a job.
+- Exp 2 predictions both correct (appdata OK, iam refused). Taught: first error line is the cause.
+- Break-it (-S localhost): prediction vague ("sqlserver can't initialize"); actually sqlserver healthy, init Exited (1) with TCP 0x2749 / Login timeout, execution-api stuck in "Created" (never started). Didn't write own diagnosis sentence.
 
 ## Open items
 | Item | Why deferred | Target |
