@@ -16,3 +16,37 @@ jobs:
           java-version: "21"
           cache: maven
       - run: ./mvnw -B verify
+
+  # Builds the image on every run, scans it, and pushes it only from main.
+  image:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # lets GITHUB_TOKEN push to GHCR, no personal token needed
+    env:
+      # Tag = commit SHA: every image points to exactly one commit (":latest" points to "whatever was last").
+      IMAGE: ghcr.io/${{ github.repository_owner }}/execution-api:${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: execution-api/Dockerfile
+          tags: ${{ env.IMAGE }}
+          load: true # keep it in the runner's local Docker so Trivy can scan it before any push
+      # Pinned to a commit SHA, not a tag: trivy-action tags were hijacked in a 2026 supply-chain attack. SHA = v0.36.0.
+      - uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          image-ref: ${{ env.IMAGE }}
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true # only fail on vulnerabilities that have a fix available
+          exit-code: "1"       # a finding fails the job, so the push below never runs
+      - if: github.ref == 'refs/heads/main'
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - if: github.ref == 'refs/heads/main'
+        run: docker push "$IMAGE"
