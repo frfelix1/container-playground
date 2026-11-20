@@ -16,6 +16,7 @@
 - Exp 1 prediction wrong: thought down -v / grep removed passwords (mixed up volume vs .env). Read the ps output with help: Exited (0) = success for a job.
 - Exp 2 predictions both correct (appdata OK, iam refused). Taught: first error line is the cause.
 - Break-it (-S localhost): prediction vague ("sqlserver can't initialize"); actually sqlserver healthy, init Exited (1) with TCP 0x2749 / Login timeout, execution-api stuck in "Created" (never started). Didn't write own diagnosis sentence.
+- PR #16 lines: learner picked from A/B options (A, B, A). First CI image run failed: wget couldn't fetch the Maven 3.10.0 distribution from repo.maven.apache.org inside the Docker build (transient); re-run passed.
 
 ## Open items
 | Item | Why deferred | Target |
