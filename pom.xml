@@ -36,5 +36,6 @@
     <!-- Modules built when you run ./mvnw from the repo root. Grows per phase. -->
     <modules>
         <module>execution-api</module>
+        <module>provisioning-api</module>
     </modules>
 </project>

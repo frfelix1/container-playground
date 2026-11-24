@@ -87,5 +87,24 @@ services:
       retries: 10
       start_period: 20s
 
+  provisioning-api:
+    build:
+      context: .
+      dockerfile: provisioning-api/Dockerfile
+    image: provisioning-api:dev
+    depends_on:
+      sqlserver-init:
+        condition: service_completed_successfully
+    environment:
+      # Same pattern as execution-api, but its OWN database and login: iam / iam_svc.
+      SPRING_DATASOURCE_URL: jdbc:sqlserver://sqlserver:1433;databaseName=iam;encrypt=true;trustServerCertificate=true
+      SPRING_DATASOURCE_USERNAME: iam_svc
+      SPRING_DATASOURCE_PASSWORD: ${IAM_DB_PASSWORD}
+    ports:
+      # host 8081 -> container 8080. Both apps listen on 8080 INSIDE their own container;
+      # only the Mac side needs different numbers.
+      - "8081:8080"
+    # shortcut: no healthcheck yet, there is no endpoint to call; step 3 adds one (/login).
+
 volumes:
   sqlserver-data:
