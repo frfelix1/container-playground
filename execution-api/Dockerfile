@@ -14,6 +14,8 @@ COPY mvnw ./
 COPY .mvn .mvn
 COPY pom.xml ./
 COPY execution-api/pom.xml execution-api/
+# The parent lists every module; Maven refuses to start if one module's pom.xml is missing.
+COPY provisioning-api/pom.xml provisioning-api/
 
 # Download dependencies into ~/.m2.
 # --mount=type=cache keeps ~/.m2 between builds on THIS machine, outside the image,
